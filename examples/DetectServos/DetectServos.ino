@@ -15,6 +15,10 @@ void setup()
 {
   // TODO: need to try the other 3 possible baud rates too
   servoSerial.begin(115200);
+
+  // Set the timeout to something short so we are not waiting a long time for
+  // non-existent servos to respond.
+  servoSerial.setTimeout(10);
 }
 
 void loop()
@@ -24,15 +28,19 @@ void loop()
   // The A1-16 IDs go from 1 to 20.
   for (uint16_t id = 1; id <= 20; id++)
   {
-    delay(20);
-    servoSerial.flush();
+    Serial.print(F("ID "));
+    Serial.print(id);
+
     PololuSmartServo servo(servoSerial, id);
     servo.readStatus();
-    uint8_t error = servo.getLastError();
-    if (error == 0)
+
+    if (servo.getLastError())
     {
-      Serial.print(F("ID "));
-      Serial.print(id);
+      Serial.print(F(": error "));
+      Serial.println(servo.getLastError());
+    }
+    else
+    {
       Serial.println(F(": detected servo"));
     }
   }
