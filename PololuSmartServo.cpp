@@ -1,5 +1,15 @@
 #include <PololuSmartServo.h>
 
+#define CMD_REQ_EEPROM_WRITE 0x01
+#define CMD_REQ_EEPROM_READ  0x02
+#define CMD_REQ_RAM_WRITE    0x03
+#define CMD_REQ_RAM_READ     0x04
+#define CMD_REQ_I_JOG        0x05
+#define CMD_REQ_S_JOG        0x06
+#define CMD_REQ_STAT         0x07
+#define CMD_REQ_ROLLBACK     0x08
+#define CMD_REQ_REBOOT       0x09
+
 PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
 {
   this->stream = &stream;
@@ -7,7 +17,7 @@ PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
   this->lastError = 0;
 }
 
-void PololuSmartServo::sendCmd(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
+void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
 {
   uint8_t header[7];
 
@@ -30,6 +40,9 @@ void PololuSmartServo::sendCmd(uint8_t cmd, const uint8_t * data, uint8_t dataSi
 
 void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
 {
+  // The CMD byte for an acknowledgment always has bit 6 set.
+  cmd |= 0x40;
+
   uint8_t header[7];
 
   uint8_t size = dataSize + sizeof(header);
@@ -92,6 +105,8 @@ void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
     lastError = 9;
     return;
   }
+
+  lastError = 0;
 }
 
 // TODO: no globals
@@ -101,7 +116,6 @@ PololuSmartServo::Status status;
 // struct is just as efficient as taking a pointer.
 void PololuSmartServo::readStatus()
 {
-  lastError = 0;
-  sendCmd(0x07, NULL, 0);
-  readAck(0x47, (uint8_t *)&status, 10);
+  sendRequest(CMD_REQ_STAT, NULL, 0);
+  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
 }

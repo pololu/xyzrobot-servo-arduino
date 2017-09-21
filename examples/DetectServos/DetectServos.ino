@@ -28,6 +28,9 @@ void loop()
   // The A1-16 IDs go from 1 to 20.
   for (uint16_t id = 1; id <= 20; id++)
   {
+    delay(10);
+    servoSerial.flush();
+
     Serial.print(F("ID "));
     Serial.print(id);
 

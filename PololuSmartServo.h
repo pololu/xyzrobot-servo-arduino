@@ -23,7 +23,7 @@ public:
   uint8_t getLastError() const { return lastError; }
 
 private:
-  void sendCmd(uint8_t cmd, const uint8_t * data, uint8_t dataSize);
+  void sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize);
   void readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize);
 
   uint8_t lastError;
