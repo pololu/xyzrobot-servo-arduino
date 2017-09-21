@@ -10,42 +10,32 @@ PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
   this->id = id;
 }
 
-void PololuSmartServo::sendCmd(uint8_t cmd, uint8_t * data, uint8_t data_size)
+void PololuSmartServo::sendCmd(uint8_t cmd, const uint8_t * data, uint8_t data_size)
 {
-  // TODO: shouldn't need to copy all of the user's data into a buffer,
-  // so we shouldn't need this check
-  if (data_size + 7 > sizeof(pkt_buf)) { return; }
+  uint8_t header[7];
+  uint8_t size = data_size + sizeof(header);
 
-  uint8_t size = data_size + 7;
+  header[0] = 0xFF;
+  header[1] = 0xFF;
+  header[2] = size;
+  header[3] = id;
+  header[4] = cmd;
 
-  uint8_t checksum1;
-  uint8_t checksum2;
-
-  pkt_buf[0] = 0xFF;
-  pkt_buf[1] = 0xFF;
-  pkt_buf[2] = size;
-  pkt_buf[3] = id;
-  pkt_buf[4] = cmd;
-
-  checksum1 = size ^ id ^ cmd;
-
+  uint8_t checksum = size ^ id ^ cmd;
   for (uint8_t i = 0; i < data_size; i++)
   {
-    pkt_buf[7 + i] = data[i];
-    checksum1 ^= data[i];
+    checksum ^= data[i];
   }
 
-  checksum1 &= 0xFE;
-  checksum2 = (~checksum1) & 0xFE;
+  header[5] = checksum & 0xFE;
+  header[6] = ~checksum & 0xFE;
 
-  pkt_buf[5] = checksum1;
-  pkt_buf[6] = checksum2;
-
-  stream->write(pkt_buf, size);
+  stream->write(header, sizeof(header));
+  stream->write(data, data_size);
 }
 
 void PololuSmartServo::readAck(uint8_t exp_cmd,
-  uint8_t * data, uint8_t exp_data_size)
+  const uint8_t * data, uint8_t exp_data_size)
 {
   // TODO: this check should not be needed
   if (exp_data_size > 100) { lastError = 0; return; }
@@ -99,7 +89,7 @@ void PololuSmartServo::readAck(uint8_t exp_cmd,
 
   for (uint8_t i = 0; i < exp_data_size; i++)
   {
-    data[i] = pkt_buf[7 + i];
+    //data[i] = pkt_buf[7 + i];
     checksum1 ^= data[i];
   }
 

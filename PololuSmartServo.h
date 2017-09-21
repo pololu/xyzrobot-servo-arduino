@@ -23,9 +23,8 @@ public:
   uint8_t getLastError() { return lastError; }
 
 private:
-  // TODO: const pointers
-  void sendCmd(uint8_t cmd, uint8_t * data, uint8_t data_size);
-  void readAck(uint8_t exp_cmd, uint8_t * data, uint8_t exp_data_size);
+  void sendCmd(uint8_t cmd, const uint8_t * data, uint8_t data_size);
+  void readAck(uint8_t exp_cmd, const uint8_t * data, uint8_t exp_data_size);
 
   uint8_t lastError;
   uint8_t id;

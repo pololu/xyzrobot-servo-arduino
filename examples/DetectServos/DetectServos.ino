@@ -19,6 +19,8 @@ void setup()
 
 void loop()
 {
+  Serial.println(F("Detecting servos..."));
+
   // The A1-16 IDs go from 1 to 20.
   for (uint16_t id = 1; id <= 20; id++)
   {
@@ -27,9 +29,12 @@ void loop()
     PololuSmartServo servo(servoSerial, id);
     servo.readStatus();
     uint8_t error = servo.getLastError();
-    Serial.print(id);
-    Serial.print(F(": "));
-    Serial.println(error);
+    if (error == 0)
+    {
+      Serial.print(F("ID "));
+      Serial.print(id);
+      Serial.println(F(": detected servo"));
+    }
   }
   delay(1000);
 }
