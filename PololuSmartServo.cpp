@@ -10,11 +10,32 @@
 #define CMD_REQ_ROLLBACK     0x08
 #define CMD_REQ_REBOOT       0x09
 
+#define SET_POSITION_CONTROL 0
+#define SET_SPEED_CONTROL 1
+#define SET_TORQUE_OFF 2
+#define SET_POSITION_CONTROL_SERVO_ON 3
+
 PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
 {
   this->stream = &stream;
   this->id = id;
   this->lastError = 0;
+}
+
+// TODO: need to properly return the status to caller; see if just returning the
+// struct is just as efficient as taking a pointer.
+PololuSmartServo::Status PololuSmartServo::readStatus()
+{
+  stream->flush();
+  Status status;
+  sendRequest(CMD_REQ_STAT, NULL, 0);
+  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
+  return status;
+}
+
+void PololuSmartServo::setTargetPosition(uint16_t position, uint8_t playTime)
+{
+  sendIJog(position, SET_POSITION_CONTROL, playTime);
 }
 
 void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
@@ -109,13 +130,20 @@ void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
   lastError = 0;
 }
 
-// TODO: no globals
-PololuSmartServo::Status status;
-
-// TODO: need to properly return the status to caller; see if just returning the
-// struct is just as efficient as taking a pointer.
-void PololuSmartServo::readStatus()
+void PololuSmartServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
 {
-  sendRequest(CMD_REQ_STAT, NULL, 0);
-  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
+  if (goal > 1023) { goal = 1023; }
+  uint8_t data[5];
+  data[0] = goal & 0xFF;
+  data[1] = goal >> 8 & 0xFF;
+  data[2] = type;
+  data[3] = id;
+  data[4] = playTime;
+  sendRequest(CMD_REQ_I_JOG, data, sizeof(data));
+
+  uint8_t status[2];
+  readAck(CMD_REQ_I_JOG, status, sizeof(status));
+
+  // TODO: set lastError based on status error field?
 }
+
