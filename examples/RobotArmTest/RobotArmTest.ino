@@ -39,8 +39,10 @@ void setup()
 
 void loop()
 {
-  Serial.println(F("Moving quickly down"));
-  servo3.setTargetPosition(479, 40);
+  servo3.readStatus();
+  
+  Serial.println(F("Moving down"));
+  servo3.setTargetPosition(479, 60);
   if (servo3.getLastError())
   {
     Serial.print(F("error "));
@@ -64,8 +66,9 @@ void loop()
   }
 
   delay(2000);
-  Serial.println(F("Moving slowly up"));
-  servo3.setTargetPosition(550, 155);
+  Serial.println(F("Moving up"));
+  servo3.setTargetPosition(550, 0);
+  uint16_t start = millis();
   if (servo3.getLastError())
   {
     Serial.print(F("error "));
@@ -76,12 +79,15 @@ void loop()
     Serial.println("no error");
   }
 
-  while (0)
+  while (1)
   {
     PololuSmartServo::Status status = servo3.readStatus();
+    Serial.print((millis() - start) & 0xFFFF);
+    Serial.print(' ');
+    Serial.print(status.targetPosition);
+    Serial.print(' ');
     Serial.println(status.currentPosition);
-    if (status.currentPosition >= 530) { break; }
-    delay(5);
+    if (status.targetPosition == 550) { break; }
   }
 
   delay(2000);

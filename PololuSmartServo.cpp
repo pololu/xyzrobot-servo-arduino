@@ -58,6 +58,8 @@ void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t da
 
   stream->write(header, sizeof(header));
   stream->write(data, dataSize);
+
+  lastError = 0;
 }
 
 void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
@@ -142,12 +144,6 @@ void PololuSmartServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
   data[4] = playTime;
   sendRequest(CMD_REQ_I_JOG, data, sizeof(data));
 
-  uint8_t status[2];
-  readAck(CMD_REQ_I_JOG, status, sizeof(status));
-
-  if (!lastError)
-  {
-    lastStatusError = status[0];
-    lastStatusDetail = status[1];
-  }
+  // Assumption: The ACK_Policy setting is not 2, so this command does not
+  // result in an acknowledgment.
 }
