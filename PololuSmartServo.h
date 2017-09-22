@@ -24,12 +24,18 @@ public:
 
   uint8_t getLastError() const { return lastError; }
 
+  uint8_t getLastStatusError() const { return lastStatusError; }
+  uint8_t getLastStatusDetail() const { return lastStatusDetail; }
+
 private:
   void sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize);
   void readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize);
   void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
-  
+
   uint8_t lastError;
+  uint8_t lastStatusError;
+  uint8_t lastStatusDetail;
+
   uint8_t id;
   Stream * stream;
 };

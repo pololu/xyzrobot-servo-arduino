@@ -20,13 +20,14 @@ PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
   this->stream = &stream;
   this->id = id;
   this->lastError = 0;
+  this->lastStatusError = 0;
+  this->lastStatusDetail = 0;
 }
 
 // TODO: need to properly return the status to caller; see if just returning the
 // struct is just as efficient as taking a pointer.
 PololuSmartServo::Status PololuSmartServo::readStatus()
 {
-  stream->flush();
   Status status;
   sendRequest(CMD_REQ_STAT, NULL, 0);
   readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
@@ -144,6 +145,9 @@ void PololuSmartServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
   uint8_t status[2];
   readAck(CMD_REQ_I_JOG, status, sizeof(status));
 
-  // TODO: set lastError based on status error field?
+  if (!lastError)
+  {
+    lastStatusError = status[0];
+    lastStatusDetail = status[1];
+  }
 }
-

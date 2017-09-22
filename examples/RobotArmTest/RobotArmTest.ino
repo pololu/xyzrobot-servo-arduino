@@ -26,31 +26,63 @@ void setup()
 {
   // TODO: need to try the other 3 possible baud rates too
   servoSerial.begin(115200);
+
+  servoSerial.setTimeout(10);
+
+  servo1.setTargetPosition(513, 40);
+  servo2.setTargetPosition(403, 40);
+  servo3.setTargetPosition(479, 40);
+  servo4.setTargetPosition(405, 40);
+  servo5.setTargetPosition(222, 40);
+  servo6.setTargetPosition(705, 40);
 }
 
 void loop()
 {
-  servo1.setTargetPosition(513, 200);
-  servo2.setTargetPosition(403, 200);
-  servo3.setTargetPosition(479, 200);
-  servo4.setTargetPosition(405, 200);
-  servo5.setTargetPosition(222, 200);
-  servo6.setTargetPosition(705, 200);
-  while (1) // tmphax: read the positions
+  Serial.println(F("Moving quickly down"));
+  servo3.setTargetPosition(479, 40);
+  if (servo3.getLastError())
+  {
+    Serial.print(F("error "));
+    Serial.println(servo3.getLastError());
+  }
+  else
+  {
+    Serial.println("no error");
+  }
+
+  while (0) // tmphax: read positions
   {
     delay(25);
     for (uint8_t i = 0; i < 6; i++)
     {
-      PololuSmartServo::Status status;
-      status = servos[i]->readStatus();
-      Serial.print(status.statusError);
-      Serial.print(' ');
-      Serial.print(status.statusDetail);
+      PololuSmartServo::Status status = servos[i]->readStatus();
+      Serial.print(status.currentPosition);
       Serial.print(' ');
     }
     Serial.println();
   }
-  delay(1000);
-  servo3.setTargetPosition(550, 200);
-  delay(1000);
+
+  delay(2000);
+  Serial.println(F("Moving slowly up"));
+  servo3.setTargetPosition(550, 155);
+  if (servo3.getLastError())
+  {
+    Serial.print(F("error "));
+    Serial.println(servo3.getLastError());
+  }
+  else
+  {
+    Serial.println("no error");
+  }
+
+  while (0)
+  {
+    PololuSmartServo::Status status = servo3.readStatus();
+    Serial.println(status.currentPosition);
+    if (status.currentPosition >= 530) { break; }
+    delay(5);
+  }
+
+  delay(2000);
 }
