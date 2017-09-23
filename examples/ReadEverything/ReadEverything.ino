@@ -36,9 +36,9 @@ void readEverything(PololuSmartServo & servo)
   else
   {
     Serial.println(F("status:"));
-    Serial.print(F("  status error: 0x"));
+    Serial.print(F("  statusError: 0x"));
     Serial.println(status.statusError, HEX);
-    Serial.print(F("  status detail: 0x"));
+    Serial.print(F("  statusDetail: 0x"));
     Serial.println(status.statusDetail, HEX);
     Serial.print(F("  pwm: "));
     Serial.println(status.pwm);
@@ -81,7 +81,7 @@ void readEverything(PololuSmartServo & servo)
     Serial.print(F("  Acceleration_Ratio: "));
     Serial.println(ram[8]);
     Serial.print(F("  Max_Wheel_Ref_Position: "));
-    Serial.println(ram[12]);
+    Serial.println(ram[12] + (ram[13] << 8));
     Serial.print(F("  Max_PWM: "));
     Serial.println(ram[16] + (ram[17] << 8));
     Serial.print(F("  Overload_Threshold: "));
@@ -149,6 +149,84 @@ void readEverything(PololuSmartServo & servo)
     Serial.print(F("  ACK_Counts: "));
     Serial.println(ram[78] + (ram[79] << 8));
   }
+
+  uint8_t eeprom[53];
+  servo.eepromRead(0, eeprom, 30);
+  if (!servo.getLastError()) { servo.eepromRead(30, eeprom + 30, 23); }
+  if (servo.getLastError())
+  {
+    Serial.print(F("error reading EEPROM: "));
+    Serial.println(servo.getLastError());
+  }
+  else
+  {
+    Serial.println("EEPROM:");
+    Serial.print(F("  Model_No: "));
+    Serial.println(eeprom[0]);
+    Serial.print(F("  Year: "));
+    Serial.println(eeprom[1]);
+    Serial.print(F("  Version/Month: "));
+    Serial.println(eeprom[2]);
+    Serial.print(F("  Day: "));
+    Serial.println(eeprom[3]);
+    Serial.print(F("  Baud_Rate: "));
+    Serial.println(eeprom[5]);
+    Serial.print(F("  sID: "));
+    Serial.println(eeprom[6]);
+    Serial.print(F("  ACK_Policy: "));
+    Serial.println(eeprom[7]);
+    Serial.print(F("  Alarm_LED_Policy: "));
+    Serial.println(eeprom[8]);
+    Serial.print(F("  Torque_Policy: "));
+    Serial.println(eeprom[9]);
+    Serial.print(F("  SPDctrl_Policy: "));
+    Serial.println(eeprom[10]);
+    Serial.print(F("  Max_Temperature: "));
+    Serial.println(eeprom[11]);
+    Serial.print(F("  Min_Voltage: "));
+    Serial.println(eeprom[12]);
+    Serial.print(F("  Max_Voltage: "));
+    Serial.println(eeprom[13]);
+    Serial.print(F("  Acceleration_Ratio: "));
+    Serial.println(eeprom[14]);
+    Serial.print(F("  Max_Wheel_Ref_Position: "));
+    Serial.println(eeprom[18] + (eeprom[19] << 8));
+    Serial.print(F("  Max_PWM: "));
+    Serial.println(eeprom[22] + (eeprom[23] << 8));
+    Serial.print(F("  Overload_Threshold: "));
+    Serial.println(eeprom[24] + (eeprom[25] << 8));
+    Serial.print(F("  Min_Position: "));
+    Serial.println(eeprom[26] + (eeprom[27] << 8));
+    Serial.print(F("  Max_Position: "));
+    Serial.println(eeprom[28] + (eeprom[29] << 8));
+    Serial.print(F("  Position_Kp: "));
+    Serial.println(eeprom[30] + (eeprom[31] << 8));
+    Serial.print(F("  Position_Kd: "));
+    Serial.println(eeprom[32] + (eeprom[33] << 8));
+    Serial.print(F("  Position_Ki: "));
+    Serial.println(eeprom[34] + (eeprom[35] << 8));
+    Serial.print(F("  Close_to_Open_Ref_Position: "));
+    Serial.println(eeprom[36] + (eeprom[37] << 8));
+    Serial.print(F("  Open_to_Close_Ref_Position: "));
+    Serial.println(eeprom[38] + (eeprom[39] << 8));
+    Serial.print(F("  Ramp_Speed: "));
+    Serial.println(eeprom[42] + (eeprom[43] << 8));
+    Serial.print(F("  LED_Blink_Period: "));
+    Serial.println(eeprom[44]);
+    Serial.print(F("  Packet_Timeout_Detection_Period: "));
+    Serial.println(eeprom[46]);
+    Serial.print(F("  Overload_Detection_Period: "));
+    Serial.println(eeprom[48]);
+    Serial.print(F("  Inposition_Margin: "));
+    Serial.println(eeprom[50]);
+    Serial.print(F("  Over_Voltage_Detection_Period: "));
+    Serial.println(eeprom[51]);
+    Serial.print(F("  Over_Temperature_Detection_Period: "));
+    Serial.println(eeprom[52]);
+    Serial.print(F("  Calibration_Difference: "));
+    Serial.println(eeprom[53]);
+  }
+
   Serial.println();
 }
 
