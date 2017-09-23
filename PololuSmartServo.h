@@ -4,23 +4,29 @@
 
 #include <Arduino.h>
 
+struct PololuSmartServoStatus
+{
+  uint8_t statusError;
+  uint8_t statusDetail;
+  uint16_t pwm;
+  uint16_t posRef;
+  uint16_t position;
+  uint16_t iBus;
+} __attribute__((packed));
+
 class PololuSmartServo {
 public:
-  struct Status
-  {
-    uint8_t statusError;  // TODO: remove?
-    uint8_t statusDetail; // TODO: remove?
-    uint16_t pwm;
-    uint16_t targetPosition;  // "pos_ref" in the A1-16 datasheet.
-    uint16_t currentPosition; // "position" in the A1-16 datasheet.
-    uint16_t busCurrent;      // "Ibus" in the A1-16 datasheet.
-  } __attribute__((packed));
-
   PololuSmartServo(Stream &, uint8_t id);
 
-  Status readStatus();
+  void eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
-  void setTargetPosition(uint16_t position, uint8_t playtime);
+  // The A1-16 seems to return an invalid response if the data size is more than
+  // 35.
+  void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
+
+  PololuSmartServoStatus readStatus();
+
+  void setTargetPosition(uint16_t position, uint8_t playtime = 0);
 
   uint8_t getLastError() const { return lastError; }
 
@@ -28,8 +34,12 @@ public:
   uint8_t getLastStatusDetail() const { return lastStatusDetail; }
 
 private:
+  void flushRead();
   void sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize);
-  void readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize);
+  void readAck(uint8_t cmd,
+    uint8_t * data1, uint8_t data1Size,
+    uint8_t * data2, uint8_t data2Size);
+  void memoryRead(uint8_t cmd, uint8_t startAddress, uint8_t * data, uint8_t dataSize);
   void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
 
   uint8_t lastError;

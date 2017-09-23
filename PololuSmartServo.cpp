@@ -24,19 +24,36 @@ PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
   this->lastStatusDetail = 0;
 }
 
+void PololuSmartServo::eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
+{
+  memoryRead(CMD_REQ_EEPROM_READ, startAddress, data, dataSize);
+}
+
+void PololuSmartServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
+{
+  memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
+}
+
 // TODO: need to properly return the status to caller; see if just returning the
 // struct is just as efficient as taking a pointer.
-PololuSmartServo::Status PololuSmartServo::readStatus()
+PololuSmartServoStatus PololuSmartServo::readStatus()
 {
-  Status status;
+  flushRead();
+
+  PololuSmartServoStatus status;
   sendRequest(CMD_REQ_STAT, NULL, 0);
-  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
+  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10, NULL, 0);
   return status;
 }
 
 void PololuSmartServo::setTargetPosition(uint16_t position, uint8_t playTime)
 {
   sendIJog(position, SET_POSITION_CONTROL, playTime);
+}
+
+void PololuSmartServo::flushRead()
+{
+  while(stream->available()) { stream->read(); }
 }
 
 void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
@@ -62,14 +79,16 @@ void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t da
   lastError = 0;
 }
 
-void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
+void PololuSmartServo::readAck(uint8_t cmd,
+  uint8_t * data1, uint8_t data1Size,
+  uint8_t * data2, uint8_t data2Size)
 {
   // The CMD byte for an acknowledgment always has bit 6 set.
   cmd |= 0x40;
 
   uint8_t header[7];
 
-  uint8_t size = dataSize + sizeof(header);
+  uint8_t size = sizeof(header) + data1Size + data2Size;
 
   uint8_t byteCount = stream->readBytes(header, sizeof(header));
   if (byteCount != sizeof(header))
@@ -108,29 +127,80 @@ void PololuSmartServo::readAck(uint8_t cmd, uint8_t * data, uint8_t dataSize)
     return;
   }
 
-  byteCount = stream->readBytes(data, dataSize);
-  if (byteCount != dataSize)
+  if (data1Size)
   {
-    lastError = 7;
-    return;
+    byteCount = stream->readBytes(data1, data1Size);
+    if (byteCount != data1Size)
+    {
+      lastError = 7;
+      return;
+    }
+  }
+
+  if (data2Size)
+  {
+    byteCount = stream->readBytes(data2, data2Size);
+    if (byteCount != data2Size)
+    {
+      lastError = 8;
+      return;
+    }
   }
 
   uint8_t checksum = size ^ id ^ cmd;
-  for (uint8_t i = 0; i < dataSize; i++) { checksum ^= data[i]; }
+  for (uint8_t i = 0; i < data1Size; i++) { checksum ^= data1[i]; }
+  for (uint8_t i = 0; i < data2Size; i++) { checksum ^= data2[i]; }
 
   if (header[5] != (checksum & 0xFE))
   {
-    lastError = 8;
+    Serial.print("hey ");
+    Serial.print(header[5], HEX);
+    Serial.print(' ');
+    Serial.print(header[6], HEX);
+    Serial.print(' ');
+    Serial.println(checksum, HEX);
+
+    lastError = 9;
     return;
   }
 
   if (header[6] != (~checksum & 0xFE))
   {
-    lastError = 9;
+    lastError = 10;
     return;
   }
 
   lastError = 0;
+}
+
+void PololuSmartServo::memoryRead(uint8_t cmd, uint8_t startAddress,
+  uint8_t * data, uint8_t dataSize)
+{
+  flushRead();
+
+  uint8_t request[2];
+  request[0] = startAddress;
+  request[1] = dataSize;
+  sendRequest(cmd, request, sizeof(request));
+
+  uint8_t response[4];
+  readAck(cmd, response, 4, data, dataSize);
+  if (lastError) { return; }
+
+  // Despite what the A1-16 datasheet says, the first two bytes of the response
+  // tend to 0, and the start address and data size come after that.
+
+  if (response[2] != request[0])
+  {
+    lastError = 15;
+    return;
+  }
+
+  if (response[3] != request[1])
+  {
+    lastError = 16;
+    return;
+  }
 }
 
 void PololuSmartServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
