@@ -24,9 +24,19 @@ XYZrobotServo::XYZrobotServo(Stream & stream, uint8_t id)
   this->lastStatusDetail = 0;
 }
 
+void XYZrobotServo::eepromWrite(uint8_t startAddress, const uint8_t * data, uint8_t dataSize)
+{
+  memoryWrite(CMD_REQ_EEPROM_WRITE, startAddress, data, dataSize);
+}
+
 void XYZrobotServo::eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
 {
   memoryRead(CMD_REQ_EEPROM_READ, startAddress, data, dataSize);
+}
+
+void XYZrobotServo::ramWrite(uint8_t startAddress, const uint8_t * data, uint8_t dataSize)
+{
+  memoryWrite(CMD_REQ_RAM_WRITE, startAddress, data, dataSize);
 }
 
 void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
@@ -34,10 +44,16 @@ void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSi
   memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
 }
 
+void XYZrobotServo::writeAckPolicyRam(XYZrobotServoAckPolicy policy)
+{
+  uint8_t p = (uint8_t)policy;
+  ramWrite(1, &p, 1);
+}
+
 XYZrobotServoAckPolicy XYZrobotServo::readAckPolicyRam()
 {
   uint8_t result = 0;
-  ramRead(1, &result, sizeof(result));
+  ramRead(1, &result, 1);
   return (XYZrobotServoAckPolicy)result;
 }
 
@@ -49,7 +65,7 @@ XYZrobotServoStatus XYZrobotServo::readStatus()
 
   XYZrobotServoStatus status;
   sendRequest(CMD_REQ_STAT, NULL, 0);
-  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10, NULL, 0);
+  readAck(CMD_REQ_STAT, (uint8_t *)&status, 10);
   return status;
 }
 
@@ -63,14 +79,17 @@ void XYZrobotServo::flushRead()
   while(stream->available()) { stream->read(); }
 }
 
-void XYZrobotServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
+void XYZrobotServo::sendRequest(uint8_t cmd,
+  const uint8_t * data1, uint8_t data1Size,
+  const uint8_t * data2, uint8_t data2Size)
 {
   uint8_t header[7];
 
-  uint8_t size = dataSize + sizeof(header);
+  uint8_t size = data1Size + data2Size + sizeof(header);
 
   uint8_t checksum = size ^ id ^ cmd;
-  for (uint8_t i = 0; i < dataSize; i++) { checksum ^= data[i]; }
+  for (uint8_t i = 0; i < data1Size; i++) { checksum ^= data1[i]; }
+  for (uint8_t i = 0; i < data2Size; i++) { checksum ^= data2[i]; }
 
   header[0] = 0xFF;
   header[1] = 0xFF;
@@ -81,7 +100,8 @@ void XYZrobotServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataS
   header[6] = ~checksum & 0xFE;
 
   stream->write(header, sizeof(header));
-  stream->write(data, dataSize);
+  if (data1Size) { stream->write(data1, data1Size); }
+  if (data2Size) { stream->write(data2, data2Size); }
 
   lastError = XYZrobotServoError::None;
 }
@@ -171,6 +191,19 @@ void XYZrobotServo::readAck(uint8_t cmd,
   }
 
   lastError = XYZrobotServoError::None;
+}
+
+void XYZrobotServo::memoryWrite(uint8_t cmd, uint8_t startAddress,
+  const uint8_t * data, uint8_t dataSize)
+{
+  uint8_t request[2];
+  request[0] = startAddress;
+  request[1] = dataSize;
+
+  sendRequest(cmd, request, sizeof(request), data, dataSize);
+
+  // Assumption: The ACK_Policy setting is not 2, so this command does not
+  // result in an acknowledgment.
 }
 
 void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,

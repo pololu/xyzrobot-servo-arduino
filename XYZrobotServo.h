@@ -79,11 +79,25 @@ class XYZrobotServo {
 public:
   XYZrobotServo(Stream &, uint8_t id);
 
+  /// Writes data from the specified buffer to the servo's EEPROM.
+  void eepromWrite(uint8_t startAddress, const uint8_t *, uint8_t dataSize);
+
+  /// Reads data from the servo's EEPROM and stores it in the specified buffer.
+  ///
+  /// The data size should be 35 or less: otherwise the A1-16 seems to return a
+  /// response with an invalid CRC.
   void eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
-  // The A1-16 seems to return an invalid response if the data size is more than
-  // 35.
+  /// Writes data from the specified buffer to the servo's RAM.
+  void ramWrite(uint8_t startAddress, const uint8_t *, uint8_t dataSize);
+
+  /// Reads data from the servo's RAM and stores it in the specified buffer.
+  ///
+  /// The data size should be 35 or less: otherwise the A1-16 seems to return a
+  /// response with an invalid CRC.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
+
+  void writeAckPolicyRam(XYZrobotServoAckPolicy);
 
   XYZrobotServoAckPolicy readAckPolicyRam();
 
@@ -97,15 +111,24 @@ public:
   uint8_t getLastError() const { return (uint8_t)lastError; }
 
   uint8_t getLastStatusError() const { return lastStatusError; }
+
   uint8_t getLastStatusDetail() const { return lastStatusDetail; }
 
 private:
   void flushRead();
-  void sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize);
+
+  void sendRequest(uint8_t cmd,
+    const uint8_t * data1, uint8_t data1Size,
+    const uint8_t * data2 = NULL, uint8_t data2Size = 0);
+
   void readAck(uint8_t cmd,
     uint8_t * data1, uint8_t data1Size,
-    uint8_t * data2, uint8_t data2Size);
+    uint8_t * data2 = NULL, uint8_t data2Size = 0);
+
+  void memoryWrite(uint8_t cmd, uint8_t startAddress, const uint8_t * data, uint8_t dataSize);
+
   void memoryRead(uint8_t cmd, uint8_t startAddress, uint8_t * data, uint8_t dataSize);
+
   void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
 
   XYZrobotServoError lastError;
