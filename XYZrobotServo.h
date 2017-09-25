@@ -4,6 +4,52 @@
 
 #include <Arduino.h>
 
+/// The possible communication errors that can happen when reading the
+/// acknowledgment packet from a servo.
+enum class XYZrobotServoError
+{
+  /// No error.
+  None = 0,
+
+  /// There was a timeout waiting to receive the 7-byte acknowledgment header.
+  HeaderTimeout = 1,
+
+  /// The first byte of received header was not 0xFF.
+  HeaderByte1Wrong = 2,
+
+  /// The second byte of the received header was not 0xFF.
+  HeaderByte2Wrong = 3,
+
+  /// The ID byte in the received header was wrong.
+  IdWrong = 4,
+
+  /// The CMD bytes in the received header was wrong.
+  CmdWrong = 5,
+
+  /// The size byte in the received header was wrong.
+  SizeWrong = 6,
+
+  /// There was a timeout reading the first expected block of data in the
+  /// acknowledgment.
+  Data1Timeout = 7,
+
+  /// There was a timeout reading the second expected block of data in the
+  /// acknowledgment.
+  Data2Timeout = 8,
+
+  /// The first byte of the checksum was wrong.
+  Checksum1Wrong = 9,
+
+  /// The second byte of the checksum was wrong.
+  Checksum2Wrong = 10,
+
+  /// The offset byte returned by an EEPROM Read or RAM Read command was wrong.
+  ReadOffsetWrong = 16,
+
+  /// The length byte returned by an EEPROM Read or RAM Read command was wrong.
+  ReadLengthWrong = 17,
+};
+
 struct XYZrobotServoStatus
 {
   uint8_t statusError;
@@ -28,7 +74,10 @@ public:
 
   void setTargetPosition(uint16_t position, uint8_t playtime = 0);
 
-  uint8_t getLastError() const { return lastError; }
+  /// Returns the communication error from the last command.  The return value
+  /// will be 0 if there was no error and non-zero if there was an error.  The
+  /// return value will be one of the values of the XYZrobotServoError enum.
+  uint8_t getLastError() const { return (uint8_t)lastError; }
 
   uint8_t getLastStatusError() const { return lastStatusError; }
   uint8_t getLastStatusDetail() const { return lastStatusDetail; }
@@ -42,7 +91,7 @@ private:
   void memoryRead(uint8_t cmd, uint8_t startAddress, uint8_t * data, uint8_t dataSize);
   void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
 
-  uint8_t lastError;
+  XYZrobotServoError lastError;
   uint8_t lastStatusError;
   uint8_t lastStatusDetail;
 

@@ -19,7 +19,7 @@ XYZrobotServo::XYZrobotServo(Stream & stream, uint8_t id)
 {
   this->stream = &stream;
   this->id = id;
-  this->lastError = 0;
+  this->lastError = XYZrobotServoError::None;
   this->lastStatusError = 0;
   this->lastStatusDetail = 0;
 }
@@ -76,7 +76,7 @@ void XYZrobotServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataS
   stream->write(header, sizeof(header));
   stream->write(data, dataSize);
 
-  lastError = 0;
+  lastError = XYZrobotServoError::None;
 }
 
 void XYZrobotServo::readAck(uint8_t cmd,
@@ -93,37 +93,37 @@ void XYZrobotServo::readAck(uint8_t cmd,
   uint8_t byteCount = stream->readBytes(header, sizeof(header));
   if (byteCount != sizeof(header))
   {
-    lastError = 1;
+    lastError = XYZrobotServoError::HeaderTimeout;
     return;
   }
 
   if (header[0] != 0xFF)
   {
-    lastError = 2;
+    lastError = XYZrobotServoError::HeaderByte1Wrong;
     return;
   }
 
   if (header[1] != 0xFF)
   {
-    lastError = 3;
+    lastError = XYZrobotServoError::HeaderByte2Wrong;
     return;
   }
 
   if (header[3] != id)
   {
-    lastError = 4;
+    lastError = XYZrobotServoError::IdWrong;
     return;
   }
 
   if (header[4] != cmd)
   {
-    lastError = 5;
+    lastError = XYZrobotServoError::CmdWrong;
     return;
   }
 
   if (header[2] != size)
   {
-    lastError = 6;
+    lastError = XYZrobotServoError::SizeWrong;
     return;
   }
 
@@ -132,7 +132,7 @@ void XYZrobotServo::readAck(uint8_t cmd,
     byteCount = stream->readBytes(data1, data1Size);
     if (byteCount != data1Size)
     {
-      lastError = 7;
+      lastError = XYZrobotServoError::Data1Timeout;
       return;
     }
   }
@@ -142,7 +142,7 @@ void XYZrobotServo::readAck(uint8_t cmd,
     byteCount = stream->readBytes(data2, data2Size);
     if (byteCount != data2Size)
     {
-      lastError = 8;
+      lastError = XYZrobotServoError::Data2Timeout;
       return;
     }
   }
@@ -153,24 +153,17 @@ void XYZrobotServo::readAck(uint8_t cmd,
 
   if (header[5] != (checksum & 0xFE))
   {
-    Serial.print("hey ");
-    Serial.print(header[5], HEX);
-    Serial.print(' ');
-    Serial.print(header[6], HEX);
-    Serial.print(' ');
-    Serial.println(checksum, HEX);
-
-    lastError = 9;
+    lastError = XYZrobotServoError::Checksum1Wrong;
     return;
   }
 
   if (header[6] != (~checksum & 0xFE))
   {
-    lastError = 10;
+    lastError = XYZrobotServoError::Checksum2Wrong;
     return;
   }
 
-  lastError = 0;
+  lastError = XYZrobotServoError::None;
 }
 
 void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
@@ -185,20 +178,20 @@ void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
 
   uint8_t response[4];
   readAck(cmd, response, 4, data, dataSize);
-  if (lastError) { return; }
+  if (getLastError()) { return; }
 
   // Despite what the A1-16 datasheet says, the first two bytes of the response
   // tend to 0, and the start address and data size come after that.
 
   if (response[2] != request[0])
   {
-    lastError = 15;
+    lastError = XYZrobotServoError::ReadOffsetWrong;
     return;
   }
 
   if (response[3] != request[1])
   {
-    lastError = 16;
+    lastError = XYZrobotServoError::ReadLengthWrong;
     return;
   }
 }

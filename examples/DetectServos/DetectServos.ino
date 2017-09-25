@@ -23,6 +23,8 @@ void setup()
 
 void loop()
 {
+  delay(2000);
+
   Serial.println(F("Detecting servos..."));
 
   // The A1-16 IDs go from 1 to 20.
@@ -31,21 +33,26 @@ void loop()
     delay(10);
     servoSerial.flush();
 
-    Serial.print(F("ID "));
-    Serial.print(id);
-
     XYZrobotServo servo(servoSerial, id);
     servo.readStatus();
 
-    if (servo.getLastError())
+    if (!servo.getLastError())
     {
-      Serial.print(F(": error "));
-      Serial.println(servo.getLastError());
+      Serial.print(F("ID "));
+      Serial.print(id);
+      Serial.println(F(": detected servo"));
+    }
+    else if (servo.getLastError() == (uint8_t)XYZrobotServoError::HeaderTimeout)
+    {
+      // This is the error we get if there was no response at all.
+      // Most of the IDs will have this error, so don't print anything.
     }
     else
     {
-      Serial.println(F(": detected servo"));
+      Serial.print(F("ID "));
+      Serial.print(id);
+      Serial.print(F(": error "));
+      Serial.println(servo.getLastError());
     }
   }
-  delay(1000);
 }
