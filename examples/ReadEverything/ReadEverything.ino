@@ -163,12 +163,14 @@ void readEverything(XYZrobotServo & servo)
     Serial.println("EEPROM:");
     Serial.print(F("  Model_No: "));
     Serial.println(eeprom[0]);
-    Serial.print(F("  Year: "));
-    Serial.println(eeprom[1]);
-    Serial.print(F("  Version/Month: "));
-    Serial.println(eeprom[2]);
-    Serial.print(F("  Day: "));
-    Serial.println(eeprom[3]);
+    Serial.print(F("  Date: "));
+    Serial.print(eeprom[1]);  // Year
+    Serial.print('-');
+    Serial.print(eeprom[2] & 0xF); // Month
+    Serial.print('-');
+    Serial.println(eeprom[3]);  // Day
+    Serial.print(F("  Firmware_Version: "));
+    Serial.println(eeprom[2] >> 4 & 0xF);
     Serial.print(F("  Baud_Rate: "));
     Serial.println(eeprom[5]);
     Serial.print(F("  sID: "));
