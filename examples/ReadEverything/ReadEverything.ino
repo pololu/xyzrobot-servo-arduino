@@ -1,7 +1,7 @@
 // This example reads all the information from a servo and prints it to the
 // serial monitor.
 
-#include <PololuSmartServo.h>
+#include <XYZrobotServo.h>
 
 // On boards with a hardware serial port available for use, use
 // that port to communicate with the Tic. For other boards,
@@ -16,7 +16,7 @@ SoftwareSerial servoSerial(10, 11);
 
 const uint8_t servoId = 1;
 
-PololuSmartServo servo(servoSerial, servoId);
+XYZrobotServo servo(servoSerial, servoId);
 
 void setup()
 {
@@ -25,9 +25,9 @@ void setup()
   servoSerial.setTimeout(10);
 }
 
-void readEverything(PololuSmartServo & servo)
+void readEverything(XYZrobotServo & servo)
 {
-  PololuSmartServoStatus status = servo.readStatus();
+  XYZrobotServoStatus status = servo.readStatus();
   if (servo.getLastError())
   {
     Serial.print(F("error reading status: "));

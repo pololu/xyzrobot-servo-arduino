@@ -1,4 +1,4 @@
-#include <PololuSmartServo.h>
+#include <XYZrobotServo.h>
 
 // On boards with a hardware serial port available for use, use
 // that port to communicate with the Tic. For other boards,
@@ -11,14 +11,14 @@
 SoftwareSerial servoSerial(10, 11);
 #endif
 
-PololuSmartServo servo1(servoSerial, 1);
-PololuSmartServo servo2(servoSerial, 2);
-PololuSmartServo servo3(servoSerial, 3);
-PololuSmartServo servo4(servoSerial, 4);
-PololuSmartServo servo5(servoSerial, 5);
-PololuSmartServo servo6(servoSerial, 6);
+XYZrobotServo servo1(servoSerial, 1);
+XYZrobotServo servo2(servoSerial, 2);
+XYZrobotServo servo3(servoSerial, 3);
+XYZrobotServo servo4(servoSerial, 4);
+XYZrobotServo servo5(servoSerial, 5);
+XYZrobotServo servo6(servoSerial, 6);
 
-PololuSmartServo * servos[] = {
+XYZrobotServo * servos[] = {
   &servo1, &servo2, &servo3, &servo4, &servo5, &servo6
 };
 
@@ -58,7 +58,7 @@ void loop()
     delay(25);
     for (uint8_t i = 0; i < 6; i++)
     {
-      PololuSmartServo::Status status = servos[i]->readStatus();
+      XYZrobotServo::Status status = servos[i]->readStatus();
       Serial.print(status.currentPosition);
       Serial.print(' ');
     }
@@ -81,7 +81,7 @@ void loop()
 
   while (1)
   {
-    PololuSmartServo::Status status = servo3.readStatus();
+    XYZrobotServo::Status status = servo3.readStatus();
     Serial.print((millis() - start) & 0xFFFF);
     Serial.print(' ');
     Serial.print(status.targetPosition);
