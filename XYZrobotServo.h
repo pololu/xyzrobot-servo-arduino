@@ -97,8 +97,16 @@ public:
   /// response with an invalid CRC.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
+  /// Write the ACK_Policy parameter byte in EEPROM.
+  void writeAckPolicyEeprom(XYZrobotServoAckPolicy);
+
+  /// Read the ACK_Policy parameter byte in EEPROM.
+  XYZrobotServoAckPolicy readAckPolicyEeprom();
+
+  /// Write the ACK_Policy parameter byte in RAM.
   void writeAckPolicyRam(XYZrobotServoAckPolicy);
 
+  /// Read the ACK_Policy parameter byte in RAM.
   XYZrobotServoAckPolicy readAckPolicyRam();
 
   XYZrobotServoStatus readStatus();

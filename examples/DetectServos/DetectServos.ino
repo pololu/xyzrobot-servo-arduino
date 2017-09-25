@@ -45,26 +45,18 @@ void detectServo(uint8_t id)
   Serial.print(id);
   Serial.println(F(": detected servo"));
 
-  // Also read the ACK policy, since that is important to know when
-  // communicating with the servo.
+  // Also read the ACK policy from RAM and EEPROM, since that is important to
+  // know when communicating with the servo.
   XYZrobotServoAckPolicy ackPolicy = servo.readAckPolicyRam();
-  if (servo.getLastError())
+  Serial.print(F("  ACK policy: "));
+  Serial.println((uint8_t)ackPolicy);
+
+  XYZrobotServoAckPolicy ackPolicyEeprom = servo.readAckPolicyEeprom();
+  if (ackPolicyEeprom != ackPolicy)
   {
-    if (servo.getLastError() == (uint8_t)XYZrobotServoError::HeaderTimeout)
-    {
-      Serial.println(F("  ACK policy: probably 0: no response received\n"));
-    }
-    else
-    {
-    Serial.print(F("  Error getting ACK policy: "));
-    Serial.println(servo.getLastError());
-    }
-  }
-  else
-  {
-    Serial.print(F("  ACK policy: "));
-    Serial.println((uint8_t)ackPolicy);
-  }
+    Serial.print(F("  ACK policy (EEPROM): "));
+    Serial.println((uint8_t)ackPolicyEeprom);
+   }
 }
 
 void detectServos(uint32_t baudRate)

@@ -44,6 +44,19 @@ void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSi
   memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
 }
 
+void XYZrobotServo::writeAckPolicyEeprom(XYZrobotServoAckPolicy policy)
+{
+  uint8_t p = (uint8_t)policy;
+  eepromWrite(7, &p, 1);
+}
+
+XYZrobotServoAckPolicy XYZrobotServo::readAckPolicyEeprom()
+{
+  uint8_t result = 0;
+  eepromRead(7, &result, 1);
+  return (XYZrobotServoAckPolicy)result;
+}
+
 void XYZrobotServo::writeAckPolicyRam(XYZrobotServoAckPolicy policy)
 {
   uint8_t p = (uint8_t)policy;
