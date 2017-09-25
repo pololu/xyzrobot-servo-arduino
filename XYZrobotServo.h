@@ -50,6 +50,21 @@ enum class XYZrobotServoError
   ReadLengthWrong = 17,
 };
 
+/// The possible values for the ACK_Policy parameter stored in the servo's
+/// EEPROM and RAM.  This parameter determins which commands the servo will send
+/// an acknowledgment response for.
+enum class XYZrobotServoAckPolicy
+{
+  // The servo only responds to STAT commands.
+  OnlyStat = 0,
+
+  // The servo only responds to STAT, EEPROM Read, and RAM Read commands.
+  OnlyReadAndStat = 1,
+
+  // The servo responds to all commands.
+  All = 2,
+};
+
 struct XYZrobotServoStatus
 {
   uint8_t statusError;
@@ -69,6 +84,8 @@ public:
   // The A1-16 seems to return an invalid response if the data size is more than
   // 35.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
+
+  XYZrobotServoAckPolicy readAckPolicyRam();
 
   XYZrobotServoStatus readStatus();
 

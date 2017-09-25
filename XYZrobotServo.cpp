@@ -34,6 +34,13 @@ void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSi
   memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
 }
 
+XYZrobotServoAckPolicy XYZrobotServo::readAckPolicyRam()
+{
+  uint8_t result = 0;
+  ramRead(1, &result, sizeof(result));
+  return (XYZrobotServoAckPolicy)result;
+}
+
 // TODO: need to properly return the status to caller; see if just returning the
 // struct is just as efficient as taking a pointer.
 XYZrobotServoStatus XYZrobotServo::readStatus()
