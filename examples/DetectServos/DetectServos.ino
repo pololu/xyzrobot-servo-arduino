@@ -1,4 +1,4 @@
-#include <PololuSmartServo.h>
+#include <XYZrobotServo.h>
 
 // On boards with a hardware serial port available for use, use
 // that port to communicate with the Tic. For other boards,
@@ -34,7 +34,7 @@ void loop()
     Serial.print(F("ID "));
     Serial.print(id);
 
-    PololuSmartServo servo(servoSerial, id);
+    XYZrobotServo servo(servoSerial, id);
     servo.readStatus();
 
     if (servo.getLastError())

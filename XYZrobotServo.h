@@ -4,7 +4,7 @@
 
 #include <Arduino.h>
 
-struct PololuSmartServoStatus
+struct XYZrobotServoStatus
 {
   uint8_t statusError;
   uint8_t statusDetail;
@@ -14,9 +14,9 @@ struct PololuSmartServoStatus
   uint16_t iBus;
 } __attribute__((packed));
 
-class PololuSmartServo {
+class XYZrobotServo {
 public:
-  PololuSmartServo(Stream &, uint8_t id);
+  XYZrobotServo(Stream &, uint8_t id);
 
   void eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
@@ -24,7 +24,7 @@ public:
   // 35.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
-  PololuSmartServoStatus readStatus();
+  XYZrobotServoStatus readStatus();
 
   void setTargetPosition(uint16_t position, uint8_t playtime = 0);
 

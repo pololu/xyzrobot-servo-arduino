@@ -1,4 +1,4 @@
-#include <PololuSmartServo.h>
+#include <XYZrobotServo.h>
 
 #define CMD_REQ_EEPROM_WRITE 0x01
 #define CMD_REQ_EEPROM_READ  0x02
@@ -15,7 +15,7 @@
 #define SET_TORQUE_OFF 2
 #define SET_POSITION_CONTROL_SERVO_ON 3
 
-PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
+XYZrobotServo::XYZrobotServo(Stream & stream, uint8_t id)
 {
   this->stream = &stream;
   this->id = id;
@@ -24,39 +24,39 @@ PololuSmartServo::PololuSmartServo(Stream & stream, uint8_t id)
   this->lastStatusDetail = 0;
 }
 
-void PololuSmartServo::eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
+void XYZrobotServo::eepromRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
 {
   memoryRead(CMD_REQ_EEPROM_READ, startAddress, data, dataSize);
 }
 
-void PololuSmartServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
+void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize)
 {
   memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
 }
 
 // TODO: need to properly return the status to caller; see if just returning the
 // struct is just as efficient as taking a pointer.
-PololuSmartServoStatus PololuSmartServo::readStatus()
+XYZrobotServoStatus XYZrobotServo::readStatus()
 {
   flushRead();
 
-  PololuSmartServoStatus status;
+  XYZrobotServoStatus status;
   sendRequest(CMD_REQ_STAT, NULL, 0);
   readAck(CMD_REQ_STAT, (uint8_t *)&status, 10, NULL, 0);
   return status;
 }
 
-void PololuSmartServo::setTargetPosition(uint16_t position, uint8_t playTime)
+void XYZrobotServo::setTargetPosition(uint16_t position, uint8_t playTime)
 {
   sendIJog(position, SET_POSITION_CONTROL, playTime);
 }
 
-void PololuSmartServo::flushRead()
+void XYZrobotServo::flushRead()
 {
   while(stream->available()) { stream->read(); }
 }
 
-void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
+void XYZrobotServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t dataSize)
 {
   uint8_t header[7];
 
@@ -79,7 +79,7 @@ void PololuSmartServo::sendRequest(uint8_t cmd, const uint8_t * data, uint8_t da
   lastError = 0;
 }
 
-void PololuSmartServo::readAck(uint8_t cmd,
+void XYZrobotServo::readAck(uint8_t cmd,
   uint8_t * data1, uint8_t data1Size,
   uint8_t * data2, uint8_t data2Size)
 {
@@ -173,7 +173,7 @@ void PololuSmartServo::readAck(uint8_t cmd,
   lastError = 0;
 }
 
-void PololuSmartServo::memoryRead(uint8_t cmd, uint8_t startAddress,
+void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
   uint8_t * data, uint8_t dataSize)
 {
   flushRead();
@@ -203,7 +203,7 @@ void PololuSmartServo::memoryRead(uint8_t cmd, uint8_t startAddress,
   }
 }
 
-void PololuSmartServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
+void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
 {
   if (goal > 1023) { goal = 1023; }
   uint8_t data[5];
