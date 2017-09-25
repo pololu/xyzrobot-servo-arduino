@@ -45,8 +45,9 @@ void detectServo(uint8_t id)
   Serial.print(id);
   Serial.println(F(": detected servo"));
 
-  // Also read the ACK policy from RAM and EEPROM, since that is important to
-  // know when communicating with the servo.
+  // We successfully detected the servo, so print some other information that
+  // will be useful when communicating with it or troubleshooting issues.
+
   XYZrobotServoAckPolicy ackPolicy = servo.readAckPolicyRam();
   Serial.print(F("  ACK policy: "));
   Serial.println((uint8_t)ackPolicy);
@@ -56,7 +57,20 @@ void detectServo(uint8_t id)
   {
     Serial.print(F("  ACK policy (EEPROM): "));
     Serial.println((uint8_t)ackPolicyEeprom);
-   }
+  }
+
+  uint8_t versionInfo[4] = { 0, 0, 0, 0 };
+  servo.eepromRead(0, versionInfo, sizeof(versionInfo));
+  Serial.print(F("  Version info: "));
+  Serial.print(versionInfo[0]);  // Model_No
+  Serial.print(',');
+  Serial.print(versionInfo[1]);  // Year
+  Serial.print('-');
+  Serial.print(versionInfo[2] & 0xF);  // Month
+  Serial.print('-');
+  Serial.print(versionInfo[3]); // Day
+  Serial.print(',');
+  Serial.println(versionInfo[2] >> 4 & 0xF);  // Version of servo firmware
 }
 
 void detectServos(uint32_t baudRate)
@@ -68,7 +82,6 @@ void detectServos(uint32_t baudRate)
   Serial.println(F(" baud..."));
   delay(10);
 
-  // Search through possible servo IDs.
   for (uint16_t id = 1; id <= 20; id++)
   {
     detectServo(id);
