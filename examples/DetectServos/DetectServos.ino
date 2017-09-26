@@ -1,5 +1,5 @@
-// This sketch searches for smart servos and prints information about them that
-// will be useful for communicating with them.
+// This sketch searches for smart servos and prints information
+// about them that will be useful for communicating with them.
 
 #include <XYZrobotServo.h>
 
@@ -16,8 +16,8 @@ SoftwareSerial servoSerial(10, 11);
 
 void setup()
 {
-  // Set the timeout to something short so we are not waiting a long time for
-  // non-existent servos to respond.
+  // Set the timeout to something short so we are not waiting a
+  // long time for non-existent servos to respond.
   servoSerial.setTimeout(10);
 }
 
@@ -31,8 +31,9 @@ void detectServo(uint8_t id)
   {
     if (servo.getLastError() == (uint8_t)XYZrobotServoError::HeaderTimeout)
     {
-      // This is the error we get if there was no response at all.
-      // Most of the IDs will have this error, so don't print anything.
+      // This is the error we get if there was no response at
+      // all.  Most of the IDs will have this error, so don't
+      // print anything.
     }
     else
     {
@@ -48,8 +49,9 @@ void detectServo(uint8_t id)
   Serial.print(id);
   Serial.println(F(": detected servo"));
 
-  // We successfully detected the servo, so print some other information that
-  // will be useful when communicating with it or troubleshooting issues.
+  // We successfully detected the servo, so print some other
+  // information that will be useful when communicating with it
+  // or troubleshooting issues.
 
   XYZrobotServoAckPolicy ackPolicy = servo.readAckPolicyRam();
   Serial.print(F("  ACK policy: "));
@@ -73,7 +75,7 @@ void detectServo(uint8_t id)
   Serial.print('-');
   Serial.print(versionInfo[3]); // Day
   Serial.print(',');
-  Serial.println(versionInfo[2] >> 4 & 0xF);  // Version of servo firmware
+  Serial.println(versionInfo[2] >> 4 & 0xF);  // Firmware version
 }
 
 void detectServos(uint32_t baudRate)
