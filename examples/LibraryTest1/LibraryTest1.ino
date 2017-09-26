@@ -1,8 +1,7 @@
 // This example tests some features of the library that are not used in other
 // examples.  It is mainly intended for developers of the library.
 //
-// This example will change your servo's ACK_Policy parameter to 1 if it is not
-// already.
+// This example will change your servo's ACK_Policy parameter in EEPROM.
 
 #include <XYZrobotServo.h>
 
