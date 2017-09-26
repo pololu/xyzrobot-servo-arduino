@@ -87,6 +87,16 @@ void XYZrobotServo::setTargetPosition(uint16_t position, uint8_t playTime)
   sendIJog(position, SET_POSITION_CONTROL, playTime);
 }
 
+void XYZrobotServo::rollback()
+{
+  sendRequest(CMD_REQ_ROLLBACK, NULL, 0);
+}
+
+void XYZrobotServo::reboot()
+{
+  sendRequest(CMD_REQ_REBOOT, NULL, 0);
+}
+
 void XYZrobotServo::flushRead()
 {
   while(stream->available()) { stream->read(); }
@@ -214,9 +224,6 @@ void XYZrobotServo::memoryWrite(uint8_t cmd, uint8_t startAddress,
   request[1] = dataSize;
 
   sendRequest(cmd, request, sizeof(request), data, dataSize);
-
-  // Assumption: The ACK_Policy setting is not 2, so this command does not
-  // result in an acknowledgment.
 }
 
 void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
@@ -259,7 +266,4 @@ void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
   data[3] = id;
   data[4] = playTime;
   sendRequest(CMD_REQ_I_JOG, data, sizeof(data));
-
-  // Assumption: The ACK_Policy setting is not 2, so this command does not
-  // result in an acknowledgment.
 }

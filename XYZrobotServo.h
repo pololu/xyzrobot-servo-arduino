@@ -80,6 +80,11 @@ public:
   XYZrobotServo(Stream &, uint8_t id);
 
   /// Writes data from the specified buffer to the servo's EEPROM.
+  ///
+  /// After running this command, we recommend delaying for 10 ms per data byte
+  /// before sending the next command to this servo, since writing to EEPROM
+  /// takes some time and the servo cannot receive more commands until it is
+  /// done.
   void eepromWrite(uint8_t startAddress, const uint8_t *, uint8_t dataSize);
 
   /// Reads data from the servo's EEPROM and stores it in the specified buffer.
@@ -98,6 +103,10 @@ public:
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
   /// Write the ACK_Policy parameter byte in EEPROM.
+  ///
+  /// After running this command, we recommend delaying for 10 ms before sending
+  /// the next command to this servo, since writing to EEPROM takes some time
+  /// and the servo cannot receive more commands until it is done.
   void writeAckPolicyEeprom(XYZrobotServoAckPolicy);
 
   /// Read the ACK_Policy parameter byte in EEPROM.
@@ -112,6 +121,16 @@ public:
   XYZrobotServoStatus readStatus();
 
   void setTargetPosition(uint16_t position, uint8_t playtime = 0);
+
+  // Resets all parameters in EEPROM to their default values.
+  void rollback();
+
+  // Resets the servo.
+  //
+  // After running this command, we recommend delaying for 2500 ms before
+  // sending the next command to this servo, since it takes the servo a while to
+  // restart.
+  void reboot();
 
   /// Returns the communication error from the last command.  The return value
   /// will be 0 if there was no error and non-zero if there was an error.  The
