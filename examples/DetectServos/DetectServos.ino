@@ -1,3 +1,6 @@
+// This sketch searches for smart servos and prints information about them that
+// will be useful for communicating with them.
+
 #include <XYZrobotServo.h>
 
 // On boards with a hardware serial port available for use, use

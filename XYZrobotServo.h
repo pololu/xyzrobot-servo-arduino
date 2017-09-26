@@ -144,6 +144,7 @@ private:
   uint8_t lastStatusDetail;
 
   uint8_t id;
+
   Stream * stream;
 };
 

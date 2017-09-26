@@ -1,5 +1,5 @@
-// This example reads all the information from a servo and prints it to the
-// serial monitor.
+// This example reads all the information from a smart servo and prints it to
+// the serial monitor.
 
 #include <XYZrobotServo.h>
 
