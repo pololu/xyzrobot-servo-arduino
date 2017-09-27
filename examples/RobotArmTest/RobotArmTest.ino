@@ -1,6 +1,11 @@
 // This sketch does a basic test of the XYZrobot 6 DOF Robot Arm
-// Kit.  It goes to a neutral position, and then moves each of the
-// servos by a small amount, one at a time, in order by servo ID.
+// Kit:
+//
+//  https://www.pololu.com/product/2743
+//
+// It sends the arm to a starting position.  Then it moves each
+// of the servos by a small amount, one at a time, in order by
+// servo ID.
 
 #include <XYZrobotServo.h>
 
@@ -26,7 +31,7 @@ XYZrobotServo servo6(servoSerial, 6);
 // complete.
 const uint8_t playtime = 75;
 
-void neutralPosition()
+void startingPosition()
 {
   servo1.setPosition(513, playtime);
   servo2.setPosition(403, playtime);
@@ -46,7 +51,7 @@ void setup()
 void loop()
 {
   delay(2000);
-  neutralPosition();
+  startingPosition();
   delay(3000);
   servo1.setPosition(563, playtime);
   delay(1000);
