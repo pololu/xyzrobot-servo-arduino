@@ -40,7 +40,7 @@ void setup()
 void loop()
 {
   servo3.readStatus();
-  
+
   Serial.println(F("Moving down"));
   servo3.setTargetPosition(479, 60);
   if (servo3.getLastError())
