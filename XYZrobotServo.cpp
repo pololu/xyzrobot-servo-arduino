@@ -20,8 +20,6 @@ XYZrobotServo::XYZrobotServo(Stream & stream, uint8_t id)
   this->stream = &stream;
   this->id = id;
   this->lastError = XYZrobotServoError::None;
-  this->lastStatusError = 0;
-  this->lastStatusDetail = 0;
 }
 
 void XYZrobotServo::eepromWrite(uint8_t startAddress, const uint8_t * data, uint8_t dataSize)

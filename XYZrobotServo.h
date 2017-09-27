@@ -65,6 +65,7 @@ enum class XYZrobotServoAckPolicy
   All = 2,
 };
 
+/// This struct represents the data returned by a STAT command.
 struct XYZrobotServoStatus
 {
   uint8_t statusError;
@@ -159,6 +160,7 @@ public:
   /// Read the ACK_Policy parameter byte in RAM.
   XYZrobotServoAckPolicy readAckPolicyRam();
 
+  /// Sends a STAT command to the servo and returns the results.
   XYZrobotServoStatus readStatus();
 
   void setTargetPosition(uint16_t position, uint8_t playtime = 0);
@@ -182,10 +184,6 @@ public:
   /// return value will be one of the values of the XYZrobotServoError enum.
   uint8_t getLastError() const { return (uint8_t)lastError; }
 
-  uint8_t getLastStatusError() const { return lastStatusError; }
-
-  uint8_t getLastStatusDetail() const { return lastStatusDetail; }
-
 private:
   void flushRead();
 
@@ -204,8 +202,6 @@ private:
   void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
 
   XYZrobotServoError lastError;
-  uint8_t lastStatusError;
-  uint8_t lastStatusDetail;
 
   uint8_t id;
 
