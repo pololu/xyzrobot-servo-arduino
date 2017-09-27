@@ -65,6 +65,12 @@ enum class XYZrobotServoAckPolicy
   All = 2,
 };
 
+enum class XYZrobotServoSpdctrlPolicy
+{
+  OpenLoop = 0,
+  CloseLoop = 1,
+};
+
 /// This struct represents the data returned by a STAT command.
 struct XYZrobotServoStatus
 {
@@ -147,6 +153,8 @@ public:
   ///
   /// To control user LEDs, see writeLedControl().
   void writeAlarmLedPolicyRam(uint8_t);
+
+  void writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy policy);
 
   /// After calling writeAlarmLedPolicyRam(), you can use this to control any
   /// LEDs that are configured as user LED.

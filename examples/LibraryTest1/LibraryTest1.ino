@@ -90,6 +90,14 @@ void runTest()
     return;
   }
 
+  // These lines appear commented out in the SetSpeed example.
+  // Just make sure they can compile.
+  if (0)
+  {
+     servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::OpenLoop);
+     servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::CloseLoop);
+  }
+
   Serial.println(F("Test passed."));
 }
 

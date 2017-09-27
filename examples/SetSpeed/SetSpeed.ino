@@ -20,6 +20,12 @@ void setup()
   servoSerial.begin(115200);
 
   servoSerial.setTimeout(10);
+
+  // You can uncomment either of the lines below if you want to
+  // specify which speed control mode to use.  The servo uses
+  // open loop control by default.
+  // servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::OpenLoop);
+  // servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::CloseLoop);
 }
 
 void loop()

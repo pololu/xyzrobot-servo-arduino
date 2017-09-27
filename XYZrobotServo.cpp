@@ -83,6 +83,12 @@ void XYZrobotServo::writeAlarmLedPolicyRam(uint8_t policy)
   ramWrite(2, &policy, 1);
 }
 
+void XYZrobotServo::writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy policy)
+{
+  uint8_t p = (uint8_t)policy;
+  ramWrite(4, &p, 1);
+}
+
 void XYZrobotServo::writeLedControl(uint8_t control)
 {
   ramWrite(53, &control, 1);
