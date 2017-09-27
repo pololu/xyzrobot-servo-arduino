@@ -71,6 +71,7 @@ void detectServo(uint8_t id)
     return;
   }
 
+  // We successfully detected the servo.
   Serial.print(F("ID "));
   Serial.print(id);
   Serial.println(F(": detected servo"));
@@ -81,9 +82,8 @@ void detectServo(uint8_t id)
     blinkServoLed(servo);
   }
 
-  // We successfully detected the servo, so print some other
-  // information that will be useful when communicating with it
-  // or troubleshooting issues.
+  // Print some other information that will be useful when
+  // communicating with it or troubleshooting issues.
 
   XYZrobotServoAckPolicy ackPolicy = servo.readAckPolicyRam();
   Serial.print(F("  ACK policy: "));
@@ -105,7 +105,7 @@ void detectServo(uint8_t id)
   Serial.print('-');
   Serial.print(versionInfo[2] & 0xF);  // Month
   Serial.print('-');
-  Serial.print(versionInfo[3]); // Day
+  Serial.print(versionInfo[3]);  // Day
   Serial.print(',');
   Serial.println(versionInfo[2] >> 4 & 0xF);  // Firmware version
 
