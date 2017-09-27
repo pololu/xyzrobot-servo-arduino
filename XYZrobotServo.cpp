@@ -101,8 +101,6 @@ XYZrobotServoAckPolicy XYZrobotServo::readAckPolicyRam()
   return (XYZrobotServoAckPolicy)result;
 }
 
-// TODO: need to properly return the status to caller; see if just returning the
-// struct is just as efficient as taking a pointer.
 XYZrobotServoStatus XYZrobotServo::readStatus()
 {
   flushRead();
