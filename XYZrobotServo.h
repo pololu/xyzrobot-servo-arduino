@@ -163,7 +163,7 @@ public:
   /// Sends a STAT command to the servo and returns the results.
   XYZrobotServoStatus readStatus();
 
-  void setTargetPosition(uint16_t position, uint8_t playtime = 0);
+  void setPosition(uint16_t position, uint8_t playtime = 0);
 
   // Resets all parameters in EEPROM to their default values.
   //

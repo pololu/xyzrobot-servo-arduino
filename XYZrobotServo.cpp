@@ -107,7 +107,7 @@ XYZrobotServoStatus XYZrobotServo::readStatus()
   return status;
 }
 
-void XYZrobotServo::setTargetPosition(uint16_t position, uint8_t playTime)
+void XYZrobotServo::setPosition(uint16_t position, uint8_t playTime)
 {
   sendIJog(position, SET_POSITION_CONTROL, playTime);
 }
