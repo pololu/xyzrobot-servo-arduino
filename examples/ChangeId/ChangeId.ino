@@ -7,7 +7,7 @@ const uint8_t servoIdOld = 1;
 
 // Change this to be the ID that you want to change the servo to
 // have.
-const uint8_t servoIdNew = 19;
+const uint8_t servoIdNew = 1;
 
 #include <XYZrobotServo.h>
 
