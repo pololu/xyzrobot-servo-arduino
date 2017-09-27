@@ -27,7 +27,8 @@ XYZrobotServo servo(servoSerial, servoId);
 void setup()
 {
   servoSerial.begin(115200);
-  delay(2000);
+
+  delay(2500);
 
   servo.rollback();
 }

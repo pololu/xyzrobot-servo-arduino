@@ -49,7 +49,7 @@ void setup()
 
 void loop()
 {
-  delay(2000);
+  delay(2500);
   startingPosition();
   delay(3000);
   servo1.setPosition(563, playtime);
@@ -63,5 +63,5 @@ void loop()
   servo5.setPosition(272, playtime);
   delay(1000);
   servo6.setPosition(655, playtime);
-  delay(1000);
+  delay(500);
 }

@@ -33,8 +33,8 @@ void setup()
 
 void loop()
 {
-  delay(2000);
+  delay(2500);
   servo.setPosition(475, playtime);
-  delay(2000);
+  delay(2500);
   servo.setPosition(525, playtime);
 }

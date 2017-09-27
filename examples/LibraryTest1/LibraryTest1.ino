@@ -108,7 +108,7 @@ void setup()
 
 void loop()
 {
-  delay(2000);
+  delay(2500);
   runTest();
 }
 

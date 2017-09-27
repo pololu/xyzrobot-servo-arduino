@@ -30,7 +30,7 @@ void setup()
 
 void loop()
 {
-  delay(2000);
+  delay(2500);
 
   // Make sure the speed ramps up starting from 0 instead of
   // starting from a previously-remembered speed.

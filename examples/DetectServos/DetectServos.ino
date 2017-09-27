@@ -127,7 +127,7 @@ void detectServos(uint32_t baudRate)
 
 void loop()
 {
-  delay(2000);
+  delay(2500);
 
   // Try each of the four baud rates supported by the A1-16 servo.
   detectServos(9600);
