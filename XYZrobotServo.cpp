@@ -80,6 +80,16 @@ void XYZrobotServo::writeAckPolicyRam(XYZrobotServoAckPolicy policy)
   ramWrite(1, &p, 1);
 }
 
+void XYZrobotServo::writeAlarmLedPolicyRam(uint8_t policy)
+{
+  ramWrite(2, &policy, 1);
+}
+
+void XYZrobotServo::writeLedControl(uint8_t control)
+{
+  ramWrite(53, &control, 1);
+}
+
 XYZrobotServoAckPolicy XYZrobotServo::readAckPolicyRam()
 {
   uint8_t result = 0;

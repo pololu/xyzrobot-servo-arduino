@@ -3,6 +3,13 @@
 
 #include <XYZrobotServo.h>
 
+// Set this to true if you want this sketch to blink each servo's
+// LED when it detects it.  This makes the detection process take
+// longer, but it can be useful if you want to make sure your
+// servos are in the right order.  The LEDs will be blinked in
+// order by increasing ID number.
+const bool blinkLedEnabled = true;
+
 // On boards with a hardware serial port available for use, use
 // that port to communicate with the Tic. For other boards,
 // create a SoftwareSerial object using pin 10 to receive (RX)
@@ -19,6 +26,25 @@ void setup()
   // Set the timeout to something short so we are not waiting a
   // long time for non-existent servos to respond.
   servoSerial.setTimeout(10);
+}
+
+void blinkServoLed(XYZrobotServo & servo)
+{
+  // Make all the LEDs be user-controlled.
+  servo.writeAlarmLedPolicyRam(0b1111);
+
+  // Turn on the red and blue LEDs to make magenta.
+  servo.writeLedControl(0b1010);
+
+  delay(1000);
+
+  // Turn on the white LED while turning the others off, and
+  // restore control to the system.  Both the writeLedControl and
+  // the delay commands seem to be necessary to get the LED to
+  // change back to white.
+  servo.writeLedControl(0b0001);
+  delay(10);
+  servo.writeAlarmLedPolicyRam(0);
 }
 
 void detectServo(uint8_t id)
@@ -49,6 +75,12 @@ void detectServo(uint8_t id)
   Serial.print(id);
   Serial.println(F(": detected servo"));
 
+  // If desired, make the servo's LED shine magenta for one second.
+  if (blinkLedEnabled)
+  {
+    blinkServoLed(servo);
+  }
+
   // We successfully detected the servo, so print some other
   // information that will be useful when communicating with it
   // or troubleshooting issues.
@@ -76,6 +108,7 @@ void detectServo(uint8_t id)
   Serial.print(versionInfo[3]); // Day
   Serial.print(',');
   Serial.println(versionInfo[2] >> 4 & 0xF);  // Firmware version
+
 }
 
 void detectServos(uint32_t baudRate)

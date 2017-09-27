@@ -133,6 +133,29 @@ public:
   /// Write the ACK_Policy parameter byte in RAM.
   void writeAckPolicyRam(XYZrobotServoAckPolicy);
 
+  /// Write the Alarm_LED_Policy byte in RAM.  This controls which LEDs on the
+  /// servo are controlled by the user and which are controlled by the system.
+  ///
+  /// A 0 bit means the LED is controlled by the system, and a 1 bit means the
+  /// LED is controlled by the user.
+  ///
+  /// - Bit 0: White LED
+  /// - Bit 1: Blue LED
+  /// - Bit 2: Green LED
+  /// - Bit 3: Red LED
+  ///
+  /// To control user LEDs, see writeLedControl().
+  void writeAlarmLedPolicyRam(uint8_t);
+
+  /// After calling writeAlarmLedPolicyRam(), you can use this to control any
+  /// LEDs that are configured as user LED.
+  ///
+  /// - Bit 0: White LED
+  /// - Bit 1: Blue LED
+  /// - Bit 2: Green LED
+  /// - Bit 3: Red LED
+  void writeLedControl(uint8_t);
+
   /// Read the ACK_Policy parameter byte in RAM.
   XYZrobotServoAckPolicy readAckPolicyRam();
 
