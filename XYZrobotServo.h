@@ -163,6 +163,13 @@ public:
   /// Sends a STAT command to the servo and returns the results.
   XYZrobotServoStatus readStatus();
 
+  /// Sends an I-JOG command to set the target/goal position for this servo.
+  ///
+  /// The position should be a number between 0 and 1023.
+  ///
+  /// The playtime should the desired time for the movement to take, in units of
+  /// 10 ms.  For example, a playtime of 50 would correspond to 500 ms or 0.5
+  /// seconds.
   void setPosition(uint16_t position, uint8_t playtime = 0);
 
   // Resets all parameters in EEPROM to their default values.
