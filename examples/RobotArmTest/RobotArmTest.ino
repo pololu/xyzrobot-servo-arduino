@@ -1,5 +1,6 @@
 // This sketch does a basic test of the XYZrobot 6 DOF Robot Arm
-// Kit.
+// Kit.  It goes to a neutral position, and then moves each of the
+// servos by a small amount, one at a time, in order by servo ID.
 
 #include <XYZrobotServo.h>
 
@@ -23,16 +24,16 @@ XYZrobotServo servo6(servoSerial, 6);
 
 // The time, in units of 10 ms, that movements should take to
 // complete.
-const uint8_t playTime = 50;
+const uint8_t playtime = 75;
 
 void neutralPosition()
 {
-  servo1.setPosition(513, playTime);
-  servo2.setPosition(403, playTime);
-  servo3.setPosition(479, playTime);
-  servo4.setPosition(405, playTime);
-  servo5.setPosition(222, playTime);
-  servo6.setPosition(705, playTime);
+  servo1.setPosition(513, playtime);
+  servo2.setPosition(403, playtime);
+  servo3.setPosition(479, playtime);
+  servo4.setPosition(405, playtime);
+  servo5.setPosition(222, playtime);
+  servo6.setPosition(600, playtime);
 }
 
 void setup()
@@ -44,8 +45,19 @@ void setup()
 
 void loop()
 {
+  delay(2000);
   neutralPosition();
-  delay(2000);
-  servo3.setPosition(550, playTime);
-  delay(2000);
+  delay(3000);
+  servo1.setPosition(563, playtime);
+  delay(1000);
+  servo2.setPosition(453, playtime);
+  delay(1000);
+  servo3.setPosition(529, playtime);
+  delay(1000);
+  servo4.setPosition(455, playtime);
+  delay(1000);
+  servo5.setPosition(272, playtime);
+  delay(1000);
+  servo6.setPosition(655, playtime);
+  delay(1000);
 }
