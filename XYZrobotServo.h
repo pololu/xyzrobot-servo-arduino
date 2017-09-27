@@ -102,6 +102,24 @@ public:
   /// response with an invalid CRC.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
+  /// Write the sID parameter byte in EEPROM, which determines which ID the
+  /// servo uses on its serial interface.
+  ///
+  /// After running this command, we recommend delaying for 10 ms before sending
+  /// the next command to this servo, since writing to EEPROM takes some time
+  /// and the servo cannot receive more commands until it is done.
+  void writeIdEeprom(uint8_t id);
+
+  /// Reads the sID parameter byte in EEPROM, which determines which ID the
+  /// servo uses on its serial interface.
+  uint8_t readIdEeprom();
+
+  /// Write the sID parameter byte in RAM, which determines which ID the
+  /// servo uses on its serial interface.
+  ///
+  /// Write the ACK_Policy parameter byte in RAM.
+  void writeIdRam(uint8_t id);
+
   /// Write the ACK_Policy parameter byte in EEPROM.
   ///
   /// After running this command, we recommend delaying for 10 ms before sending
@@ -123,6 +141,10 @@ public:
   void setTargetPosition(uint16_t position, uint8_t playtime = 0);
 
   // Resets all parameters in EEPROM to their default values.
+  //
+  // After running this command, we recommend delaying for 2500 ms before
+  // sending the next command to this servo, since it takes the servo a while to
+  // change its parameters.
   void rollback();
 
   // Resets the servo.
