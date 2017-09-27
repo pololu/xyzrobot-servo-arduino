@@ -107,9 +107,19 @@ XYZrobotServoStatus XYZrobotServo::readStatus()
   return status;
 }
 
-void XYZrobotServo::setPosition(uint16_t position, uint8_t playTime)
+void XYZrobotServo::setPosition(uint16_t position, uint8_t playtime)
 {
-  sendIJog(position, SET_POSITION_CONTROL, playTime);
+  sendIJog(position, SET_POSITION_CONTROL, playtime);
+}
+
+void XYZrobotServo::setSpeed(uint16_t speed, uint8_t playtime)
+{
+  sendIJog(speed, SET_SPEED_CONTROL, playtime);
+}
+
+void XYZrobotServo::torqueOff()
+{
+  sendIJog(0, SET_TORQUE_OFF, 0);
 }
 
 void XYZrobotServo::rollback()
@@ -281,7 +291,7 @@ void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
   }
 }
 
-void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
+void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playtime)
 {
   if (goal > 1023) { goal = 1023; }
   uint8_t data[5];
@@ -289,6 +299,6 @@ void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playTime)
   data[1] = goal >> 8 & 0xFF;
   data[2] = type;
   data[3] = id;
-  data[4] = playTime;
+  data[4] = playtime;
   sendRequest(CMD_REQ_I_JOG, data, sizeof(data));
 }

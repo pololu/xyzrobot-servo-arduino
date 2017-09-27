@@ -172,6 +172,17 @@ public:
   /// seconds.
   void setPosition(uint16_t position, uint8_t playtime = 0);
 
+  /// Sends an I-JOG command to set the speed for this servo.
+  ///
+  /// The playtime specifies how long this command will last, in units of 10 ms.
+  /// A value of 0 makes it last indefinitely.
+  ///
+  /// See writeSpeedControlPolicyRam().
+  void setSpeed(uint16_t speed, uint8_t playtime = 0);
+
+  /// Sends an I-JOG command to turn off the servo's motor.
+  void torqueOff();
+
   // Resets all parameters in EEPROM to their default values.
   //
   // After running this command, we recommend delaying for 2500 ms before
@@ -206,7 +217,7 @@ private:
 
   void memoryRead(uint8_t cmd, uint8_t startAddress, uint8_t * data, uint8_t dataSize);
 
-  void sendIJog(uint16_t goal, uint8_t type, uint8_t playTime);
+  void sendIJog(uint16_t goal, uint8_t type, uint8_t playtime);
 
   XYZrobotServoError lastError;
 
