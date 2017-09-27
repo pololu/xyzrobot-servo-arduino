@@ -1,7 +1,11 @@
 // This example shows how to send the Rollback command to reset a
 // servo's settings in EEPROM to their defaults.
 //
-// Before using this, be sure to set the parameter below.
+// Note that this will reset the servo's ID to 1, so you should
+// NOT do this if there is already another servo on your chain
+// with ID 1, since you could cause an ID conflict.
+//
+// Before using this, be sure to set the servoId variable below.
 
 // Change this to be the servo's ID.
 const uint8_t servoId = 1;
@@ -23,7 +27,9 @@ XYZrobotServo servo(servoSerial, servoId);
 
 void setup()
 {
+  servoSerial.begin(115200);
   delay(2000);
+
   servo.rollback();
 }
 
