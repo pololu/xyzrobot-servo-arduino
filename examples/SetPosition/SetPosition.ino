@@ -4,6 +4,9 @@
 // Positions are represented as numbers between 0 and 1023.  When
 // you set a position, you can also specify the playtime, which
 // is how long you want the movement to take, in units of 10 ms.
+//
+// This sketch only writes data to the servos; it does not
+// receive anything.
 
 #include <XYZrobotServo.h>
 

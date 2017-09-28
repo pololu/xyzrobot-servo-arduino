@@ -6,6 +6,9 @@
 // It sends the arm to a starting position.  Then it moves each
 // of the servos by a small amount, one at a time, in order by
 // servo ID.
+//
+// This sketch only writes data to the servos; it does not
+// receive anything.
 
 #include <XYZrobotServo.h>
 

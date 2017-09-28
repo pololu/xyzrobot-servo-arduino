@@ -1,3 +1,11 @@
+// This sketch shows how to set the speed of a servo using open
+// loop or closed loop speed control.
+//
+// Speeds are represented as numbers between 0 and 1023.
+//
+// This sketch only writes data to the servos; it does not
+// receive anything.
+
 #include <XYZrobotServo.h>
 
 // On boards with a hardware serial port available for use, use
