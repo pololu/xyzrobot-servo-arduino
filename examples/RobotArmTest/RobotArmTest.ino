@@ -3,6 +3,13 @@
 //
 //  https://www.pololu.com/product/2743
 //
+// WARNING: Depending on how you have constructed your robot arm,
+// the positions that this sketch sends the servos to might be
+// invalid and cause the servos to stall or put tension on their
+// cables.  Be ready to disconnect power, and consider commenting
+// out most of the servos in this sketch and adding them back one
+// by one.
+//
 // It sends the arm to a starting position.  Then it moves each
 // of the servos by a small amount, one at a time, in order by
 // servo ID.
