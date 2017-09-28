@@ -1,16 +1,13 @@
-// This example tests some features of the library that are not
-// used in other examples.  It is mainly intended for developers
-// of the library.
+// This example tests some features of the library that are not used in other
+// examples.  It is mainly intended for developers of the library.
 //
-// This example will change your servo's ACK_Policy parameter in
-// EEPROM.
+// This example will change your servo's ACK_Policy parameter in EEPROM.
 
 #include <XYZrobotServo.h>
 
-// On boards with a hardware serial port available for use, use
-// that port. For other boards,
-// create a SoftwareSerial object using pin 10 to receive (RX)
-// and pin 11 to transmit (TX).
+// On boards with a hardware serial port available for use, use that port. For
+// other boards, create a SoftwareSerial object using pin 10 to receive (RX) and
+// pin 11 to transmit (TX).
 #ifdef SERIAL_PORT_HARDWARE_OPEN
 #define servoSerial SERIAL_PORT_HARDWARE_OPEN
 #else
@@ -107,13 +104,12 @@ void setup()
   servoSerial.begin(115200);
   servoSerial.setTimeout(10);
 
-  // To receive data, a pull-up is needed on the RX line because
-  // the servos do not pull the line high while idle.  If you are
-  // using SoftwareSerial, the pull-up is probably enabled
-  // already.  If you are using the hardware serial port on an
-  // ATmega32U4-based board, we know the RX pin must be pin 0 so
-  // we enable its pull-up here.  For other cases, you should add
-  // code below to enable the pull-up on your board's RX line.
+  // To receive data, a pull-up is needed on the RX line because the servos do
+  // not pull the line high while idle.  If you are using SoftwareSerial, the
+  // pull-up is probably enabled already.  If you are using the hardware serial
+  // port on an ATmega32U4-based board, we know the RX pin must be pin 0 so we
+  // enable its pull-up here.  For other cases, you should add code below to
+  // enable the pull-up on your board's RX line.
 #if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
   digitalWrite(0, HIGH);
 #endif
