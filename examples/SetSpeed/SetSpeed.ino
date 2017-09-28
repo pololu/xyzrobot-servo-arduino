@@ -3,6 +3,11 @@
 //
 // Speeds are represented as numbers between 0 and 1023.
 //
+// This sketch only shows how to turn the servo
+// counter-clockwise.  We have not yet figured out how to make
+// them turn in the other direction with speed control mode
+// (TODO).
+//
 // This sketch only writes data to the servos; it does not
 // receive anything.
 
@@ -47,8 +52,6 @@ void loop()
   // to the specified speed.
   servo.setSpeed(400);
   delay(500);
-
-  // TODO: turn it clockwise too
 
   // Turn off the motor, letting the servo smoothly stop.  You
   // could use "servo.setSpeed(0)" to stop here, but it would
