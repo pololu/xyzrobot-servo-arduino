@@ -21,9 +21,11 @@ SoftwareSerial servoSerial(10, 11);
 #endif
 
 // Set up a servo object, specifying what serial port to use and
-// what ID number to use.  Change the number below to match the
-// ID of your servo.
-XYZrobotServo servo(servoSerial, 1);
+// what ID number to use.
+//
+// WARNING: Only change the ID number below to a servo that can
+// rotate freely without damaging anything.
+XYZrobotServo servo(servoSerial, 128);
 
 const uint8_t playtime = 75;
 

@@ -5,8 +5,7 @@
 //
 // This sketch only shows how to turn the servo
 // counter-clockwise.  We have not yet figured out how to make
-// them turn in the other direction with speed control mode
-// (TODO).
+// them turn in the other direction with speed control mode.
 //
 // This sketch only writes data to the servos; it does not
 // receive anything.
@@ -24,9 +23,11 @@ SoftwareSerial servoSerial(10, 11);
 #endif
 
 // Set up a servo object, specifying what serial port to use and
-// what ID number to use.  Change the number below to match the
-// ID of your servo.
-XYZrobotServo servo(servoSerial, 6);  // TODO: ID=1
+// what ID number to use.
+//
+// WARNING: Only change the ID number below to a servo that can
+// rotate freely without damaging anything.
+XYZrobotServo servo(servoSerial, 128);
 
 void setup()
 {

@@ -1,14 +1,5 @@
 // This example shows how to send the Rollback command to reset a
 // servo's settings in EEPROM to their defaults.
-//
-// Note that this will reset the servo's ID to 1, so you should
-// NOT do this if there is already another servo on your chain
-// with ID 1, since you could cause an ID conflict.
-//
-// Before using this, be sure to set the servoId variable below.
-
-// Change this to be the servo's ID.
-const uint8_t servoId = 1;
 
 #include <XYZrobotServo.h>
 
@@ -22,7 +13,14 @@ const uint8_t servoId = 1;
 SoftwareSerial servoSerial(10, 11);
 #endif
 
-XYZrobotServo servo(servoSerial, servoId);
+// Set up a servo object, specifying what serial port to use and
+// what ID number to use.
+//
+// WARNING: If you change the ID number below to something other
+// than 1, make sure there are no other servos in your system
+// with ID 1.  Otherwise, you could cause an ID conflict, because
+// the servo you roll back will change its ID to 1.
+XYZrobotServo servo(servoSerial, 1);
 
 void setup()
 {
