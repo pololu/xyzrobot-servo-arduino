@@ -103,7 +103,20 @@ void runTest()
 
 void setup()
 {
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
+  servoSerial.setTimeout(10);
+
+  // To receive data, a pull-up is needed on the RX line because
+  // the servos do not pull the line high while idle.  If you are
+  // using SoftwareSerial, the pull-up is probably enabled
+  // already.  If you are using the hardware serial port on an
+  // ATmega32U4-based board, we know the RX pin must be pin 0 so
+  // we enable its pull-up here.  For other cases, you should add
+  // code below to enable the pull-up on your board's RX line.
+#if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
+  digitalWrite(0, HIGH);
+#endif
 }
 
 void loop()

@@ -42,9 +42,8 @@ void startingPosition()
 
 void setup()
 {
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
-
-  servoSerial.setTimeout(10);
 }
 
 void loop()

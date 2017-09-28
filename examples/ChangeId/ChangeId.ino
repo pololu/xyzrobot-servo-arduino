@@ -24,11 +24,14 @@ SoftwareSerial servoSerial(10, 11);
 XYZrobotServo servoOld(servoSerial, servoIdOld);
 XYZrobotServo servoNew(servoSerial, servoIdNew);
 
-bool success = false;
+bool success;
 char errorMessage[256];
 
 void tryToChangeId()
 {
+  success = false;
+  errorMessage[0] = 0;
+
   // Make sure we can communicate with the servo with its current ID.
   servoOld.readStatus();
   if (servoOld.getLastError())
@@ -93,9 +96,20 @@ void tryToChangeId()
 
 void setup()
 {
-  errorMessage[0] = 0;
-
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
+  servoSerial.setTimeout(10);
+
+  // To receive data, a pull-up is needed on the RX line because
+  // the servos do not pull the line high while idle.  If you are
+  // using SoftwareSerial, the pull-up is probably enabled
+  // already.  If you are using the hardware serial port on an
+  // ATmega32U4-based board, we know the RX pin must be pin 0 so
+  // we enable its pull-up here.  For other cases, you should add
+  // code below to enable the pull-up on your board's RX line.
+#if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
+  digitalWrite(0, HIGH);
+#endif
 
   delay(2500);
 

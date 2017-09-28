@@ -26,6 +26,7 @@ XYZrobotServo servo(servoSerial, servoId);
 
 void setup()
 {
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
 
   delay(2500);

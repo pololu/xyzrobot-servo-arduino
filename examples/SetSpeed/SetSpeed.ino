@@ -17,9 +17,8 @@ XYZrobotServo servo(servoSerial, 6);  // TODO: ID=1
 
 void setup()
 {
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
-
-  servoSerial.setTimeout(10);
 
   // You can uncomment either of the lines below if you want to
   // specify which speed control mode to use.  The servo uses

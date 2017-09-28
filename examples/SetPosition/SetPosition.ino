@@ -26,9 +26,8 @@ const uint8_t playtime = 75;
 
 void setup()
 {
+  // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
-
-  servoSerial.setTimeout(10);
 }
 
 void loop()
