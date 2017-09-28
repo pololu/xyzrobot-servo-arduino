@@ -5,8 +5,7 @@
 // Change this to be ID that the servo currently has.
 const uint8_t servoIdOld = 1;
 
-// Change this to be the ID that you want to change the servo to
-// have.
+// Change this to be the ID that you want the servo to have.
 const uint8_t servoIdNew = 1;
 
 #include <XYZrobotServo.h>
@@ -48,7 +47,7 @@ void tryToChangeId()
 
   // Make sure there is not another servo using the new ID,
   // because then changing the ID would cause an ID conflict and
-  // it could be annoying to fix.
+  // it could be hard to fix.
   servoNew.readStatus();
   if (servoNew.getLastError() != (uint8_t)XYZrobotServoError::HeaderTimeout)
   {
