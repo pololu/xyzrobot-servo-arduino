@@ -35,10 +35,8 @@ SoftwareSerial library cannot reliably receive data at 115200 baud, and that is
 the default baud rate used by the servos.
 
 To get your sketch to receive data reliably with SoftwareSerial, you will have
-to lower the baud rate of the servos and change the sketch to use the lower baud
-rate.  We do not have example code showing how to do that, but you could refer
-to the servo's datasheet and use the ChangeId example as a reference to write
-your own code that changes the baud rate.
+to lower the baud rate of the servos to 57600 or lower using this library's
+ChangeBaud example.
 
 Even after you lower the baud rate, you should still be careful not to add any
 libraries to your project that will have an interrupt service routine (ISR) that
@@ -169,8 +167,9 @@ ACK policy, that could cause issues.
 
 You should run the DetectServos example describe above before attempting to
 reconfigure any of these parameters.  If you need to change a servo's ID, see
-the ChangeId example.  We do not yet have examples showing how to change the
-baud rate or ACK policy.
+the ChangeId example.  If you need to change a servo's baud rate, see the
+ChangeBaud example.  We do not yet have an example showing how to change the ACK
+policy.
 
 
 ## Getting your servos to move

@@ -50,6 +50,26 @@ enum class XYZrobotServoError
   ReadLengthWrong = 17,
 };
 
+enum class XYZrobotServoBaudRate
+{
+  B9600 = 1,
+  B19200 = 2,
+  B57600 = 6,
+  B115200 = 12,
+};
+
+static inline uint32_t XYZrobotServoBaudRateToInt(XYZrobotServoBaudRate baud)
+{
+  switch (baud)
+  {
+  case XYZrobotServoBaudRate::B9600:   return 9600;
+  case XYZrobotServoBaudRate::B19200:  return 19200;
+  case XYZrobotServoBaudRate::B57600:  return 57600;
+  case XYZrobotServoBaudRate::B115200: return 115200;
+  default: return 0;
+  }
+}
+
 /// The possible values for the ACK_Policy parameter stored in the servo's
 /// EEPROM and RAM.  This parameter determins which commands the servo will send
 /// an acknowledgment response for.
@@ -108,6 +128,18 @@ public:
   /// The data size should be 35 or less: otherwise the A1-16 seems to return a
   /// response with an invalid CRC.
   void ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSize);
+
+  /// Write the Baud_Rate parameter byte in EEPROM, which determines which baud
+  /// rate the servo uses on its serial interface.
+  ///
+  /// After running this command, we recommend delaying for 10 ms before sending
+  /// the next command to this servo, since writing to EEPROM takes some time
+  /// and the servo cannot receive more commands until it is done.
+  void writeBaudRateEeprom(XYZrobotServoBaudRate baudRate);
+
+  /// Reads the Baud_Rate parameter byte in EEPROM, which determines which baud
+  /// rate the servo uses on its serial interface.
+  XYZrobotServoBaudRate readBaudRateEeprom();
 
   /// Write the sID parameter byte in EEPROM, which determines which ID the
   /// servo uses on its serial interface.

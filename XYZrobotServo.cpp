@@ -42,6 +42,19 @@ void XYZrobotServo::ramRead(uint8_t startAddress, uint8_t * data, uint8_t dataSi
   memoryRead(CMD_REQ_RAM_READ, startAddress, data, dataSize);
 }
 
+void XYZrobotServo::writeBaudRateEeprom(XYZrobotServoBaudRate baud)
+{
+  uint8_t b = (uint8_t)baud;
+  memoryWrite(CMD_REQ_EEPROM_WRITE, 5, &b, 1);
+}
+
+XYZrobotServoBaudRate XYZrobotServo::readBaudRateEeprom()
+{
+  uint8_t b = 0;
+  memoryRead(CMD_REQ_EEPROM_READ, 5, &b, 1);
+  return (XYZrobotServoBaudRate)b;
+}
+
 void XYZrobotServo::writeIdEeprom(uint8_t id)
 {
   memoryWrite(CMD_REQ_EEPROM_WRITE, 6, &id, 1);
