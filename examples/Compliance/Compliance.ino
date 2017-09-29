@@ -2,6 +2,11 @@
 // Kit hold it self up, while complying when you try to move it
 // by hand.
 //
+// If you send an 'f' character with the Serial Monitor, this
+// sketch will print the positions of all the servos, separated
+// by commas.  These numbers can then be copied into another
+// program to be frames in an animation.
+//
 // You can use this sketch with other arrangements of A1-16
 // servos that are not the robot arm, but you might need to
 // change the part of the code that defines SERVO_COUNT and sets
@@ -46,19 +51,24 @@ XYZrobotServo * servos[SERVO_COUNT] = {
   &servo1, &servo2, &servo3, &servo4, &servo5, &servo6
 };
 
-struct ServoInfo
-{
-};
-
-ServoInfo servoInfos[SERVO_COUNT];
-
 void setup()
 {
   servoSerial.begin(115200);
   servoSerial.setTimeout(10);
+
+  // To receive data, a pull-up is needed on the RX line because
+  // the servos do not pull the line high while idle.  If you are
+  // using SoftwareSerial, the pull-up is probably enabled
+  // already.  If you are using the hardware serial port on an
+  // ATmega32U4-based board, we know the RX pin must be pin 0 so
+  // we enable its pull-up here.  For other cases, you should add
+  // code below to enable the pull-up on your board's RX line.
+#if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
+  digitalWrite(0, HIGH);
+#endif
 }
 
-bool updateServo(XYZrobotServo & servo, ServoInfo & info)
+bool updateServo(XYZrobotServo & servo)
 {
   XYZrobotServoStatus status = servo.readStatus();
   if (servo.getLastError())
@@ -85,11 +95,11 @@ bool updateServo(XYZrobotServo & servo, ServoInfo & info)
   return true;
 }
 
-void loop()
+void updateServos()
 {
-  for (uint8_t i = 0; i < SERVO_COUNT; i++)
+  for (uint8_t i = 1; i < SERVO_COUNT; i++)  // tmphax
   {
-    bool success = updateServo(*servos[i], servoInfos[i]);
+    bool success = updateServo(*servos[i]);
     if (!success)
     {
       Serial.print(F("Error: Failed to communicate with servo "));
@@ -97,6 +107,36 @@ void loop()
       break;
     }
   }
+}
+
+void handleSerialCommands()
+{
+  int input = Serial.read();
+
+  // If we receive an 'f' from the serial monitor, print the
+  // current servo positions so they can be used to make an
+  // animation.
+  if (input == 'f')
+  {
+    for (uint8_t i = 0; i < SERVO_COUNT; i++)
+    {
+      uint16_t posRef = servos[i]->readPosRef();
+      Serial.print(posRef);
+      if (i + 1 != SERVO_COUNT)
+      {
+        Serial.print(F(", "));
+      }
+    }
+    Serial.println();
+  }
+}
+
+
+void loop()
+{
+  updateServos();
+
+  handleSerialCommands();
 
   delay(20);
 }
