@@ -102,6 +102,11 @@ void XYZrobotServo::writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy policy)
   ramWrite(4, &p, 1);
 }
 
+void XYZrobotServo::writeMaxPwmRam(uint16_t value)
+{
+  ramWrite(16, (uint8_t *)&value, 2);
+}
+
 void XYZrobotServo::writeLedControl(uint8_t control)
 {
   ramWrite(53, &control, 1);

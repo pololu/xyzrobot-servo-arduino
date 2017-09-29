@@ -186,7 +186,15 @@ public:
   /// To control user LEDs, see writeLedControl().
   void writeAlarmLedPolicyRam(uint8_t);
 
+  /// Sets the SPDctrl_Policy variable in RAM.
   void writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy policy);
+
+  /// Sets the maximum PWM value in RAM.
+  ///
+  /// This should be a number between 0 and 1023 that indicates how strong the
+  /// servo should be allowed to drive its motor, with 1023 corresponding to
+  /// 100%.
+  void writeMaxPwmRam(uint16_t value);
 
   /// After calling writeAlarmLedPolicyRam(), you can use this to control any
   /// LEDs that are configured as user LED.

@@ -86,8 +86,7 @@ bool updateServo(XYZrobotServo & servo, ServoInfo & info)
   uint16_t newPosRef = newPosRefSigned < 0 ? 0 : newPosRefSigned;
   servo.setPosition(newPosRef);
 
-  // TODO: don't write this if it doesn't need to change
-  servo.ramWrite(16, (uint8_t *)&maxPwm, 2);
+  servo.writeMaxPwmRam(maxPwm);
 
   return true;
 }
