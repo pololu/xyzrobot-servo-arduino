@@ -203,6 +203,29 @@ public:
   /// Sends a STAT command to the servo and returns the results.
   XYZrobotServoStatus readStatus();
 
+  /// Uses a STAT command to read the current PWM duty cycle.
+  ///
+  /// See readStatus().
+  uint16_t readPwm() { return readStatus().pwm; }
+
+  /// Uses a STAT command to read the servo position.
+  ///
+  /// See readStatus().
+  uint16_t readPosition() { return readStatus().position; }
+
+  /// Uses a STAT command to read the servo position goal.
+  ///
+  /// If the servo has no position goal, this is just its current measured
+  /// position.
+  ///
+  /// See readStatus().
+  uint16_t readPosRef() { return readStatus().posRef; }
+
+  /// Uses a STAT command to read the bus current.
+  ///
+  /// See readStatus().
+  uint16_t readIBus() { return readStatus().iBus; }
+
   /// Sends an I-JOG command to set the target/goal position for this servo.
   ///
   /// The position should be a number between 0 and 1023.
