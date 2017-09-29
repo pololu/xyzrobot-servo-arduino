@@ -58,21 +58,6 @@ void setup()
   servoSerial.setTimeout(10);
 }
 
-int16_t doHysteresis(int16_t current, int16_t input, int16_t hysteresis)
-{
-  if (current < input - hysteresis)
-  {
-    current = input - hysteresis;
-  }
-
-  if (current > input + hysteresis)
-  {
-    current = input + hysteresis;
-  }
-
-  return current;
-}
-
 bool updateServo(XYZrobotServo & servo, ServoInfo & info)
 {
   XYZrobotServoStatus status = servo.readStatus();
@@ -81,9 +66,18 @@ bool updateServo(XYZrobotServo & servo, ServoInfo & info)
     return false;
   }
 
-  int16_t newPosRefSigned = doHysteresis(
-    status.posRef, status.position, servoHysteresis);
+  // If posRef, (the position that the servo is trying to
+  // maintain) is more than servoHysteresis away from the current
+  // measured position, then the servo is probably being
+  // manipulated by hand, so move posRef.
+  int16_t newPosRefSigned = constrain((int16_t)status.posRef,
+    (int16_t)(status.position - servoHysteresis),
+    (int16_t)(status.position + servoHysteresis));
+
+  // Convert posRef back to an unsigned number, handling the case
+  // where it is negative.
   uint16_t newPosRef = newPosRefSigned < 0 ? 0 : newPosRefSigned;
+
   servo.setPosition(newPosRef);
 
   servo.writeMaxPwmRam(maxPwm);
