@@ -1,14 +1,12 @@
 // This sketch searches for smart servos and prints information
 // about them that will be useful for communicating with them.
+//
+// Also, when it detects a servo, it makes the servo turn its LED
+// magenta for one second.  Since servos are detected in order by
+// increasing ID number, the blinking LED can help you verify
+// that your servos have the correct IDs.
 
 #include <XYZrobotServo.h>
-
-// Set this to true if you want this sketch to blink each servo's
-// LED when it detects it.  This makes the detection process take
-// longer, but it can be useful if you want to make sure your
-// servos are in the right order.  The LEDs will be blinked in
-// order by increasing ID number.
-const bool blinkLedEnabled = true;
 
 // On boards with a hardware serial port available for use, use
 // that port. For other boards, create a SoftwareSerial object
@@ -86,11 +84,9 @@ void detectServo(uint8_t id)
   Serial.print(id);
   Serial.println(F(": detected servo"));
 
-  // If desired, make the servo's LED shine magenta for one second.
-  if (blinkLedEnabled)
-  {
-    blinkServoLed(servo);
-  }
+  // Make the servo's LED shine magenta for one second.  You can
+  // comment this out if you want to speed up this sketch.
+  blinkServoLed(servo);
 
   // Print some other information that will be useful when
   // communicating with it or troubleshooting issues.
