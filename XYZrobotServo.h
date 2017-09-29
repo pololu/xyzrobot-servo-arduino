@@ -265,6 +265,9 @@ public:
   /// return value will be one of the values of the XYZrobotServoError enum.
   uint8_t getLastError() const { return (uint8_t)lastError; }
 
+  /// Get the servo ID assigned to this object.
+  uint8_t getId() const { return id; }
+
 private:
   void flushRead();
 
