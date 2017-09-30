@@ -1,0 +1,10 @@
+Animation data we use at Pololu to test the PlayAnimation sketch:
+
+  { 1000, 521, 535, 526, 507, 236, 662 },
+  { 1000, 466, 575, 559, 539, 236, 662 },
+  { 1000, 586, 567, 540, 512, 236, 662 },
+  { 1000, 595, 563, 696, 542, 236, 662 },
+  { 1000, 514, 533, 556, 463, 236, 662 },
+
+Your arm might be constructed differently than ours, so if you try to use this,
+it might damage your arm.
