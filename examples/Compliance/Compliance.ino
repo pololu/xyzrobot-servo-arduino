@@ -2,6 +2,11 @@
 // Kit hold it self up, while complying when you try to move it
 // by hand.
 //
+// Note that this sketch changes the Max_PWM parameter in the RAM
+// of your servos.  If your servos are not responding very well
+// after running this sketch, you might need to power cycle them
+// to make them reload the Max_PWM parameter from EEPROM.
+//
 // If you send an 'f' character with the Serial Monitor, this
 // sketch will print the positions of all the servos, separated
 // by commas.  These numbers can then be copied into another
