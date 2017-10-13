@@ -18,6 +18,11 @@
 SoftwareSerial servoSerial(10, 11);
 #endif
 
+// By default, only search for servos with IDs from 1 to 20, to
+// save time.  If you think you might have a servo with a higher
+// ID, you can change this to 255.
+const uint8_t maxId = 20;
+
 void setup()
 {
   // Turn on the serial port and set its baud rate.
@@ -121,12 +126,12 @@ void detectServos(uint32_t baudRate)
 {
   servoSerial.begin(baudRate);
 
-  Serial.print(F("Detecting servos 1 to 20 at "));
+  Serial.print(F("Detecting servos at "));
   Serial.print(baudRate);
   Serial.println(F(" baud..."));
   delay(10);
 
-  for (uint16_t id = 1; id <= 20; id++)
+  for (uint16_t id = 1; id <= maxId; id++)
   {
     detectServo(id);
   }
