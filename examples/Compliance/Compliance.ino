@@ -102,7 +102,7 @@ bool updateServo(XYZrobotServo & servo)
 
 void updateServos()
 {
-  for (uint8_t i = 1; i < SERVO_COUNT; i++)  // tmphax
+  for (uint8_t i = 1; i < SERVO_COUNT; i++)
   {
     bool success = updateServo(*servos[i]);
     if (!success)
