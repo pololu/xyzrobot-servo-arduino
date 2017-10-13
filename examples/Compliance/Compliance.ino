@@ -1,6 +1,6 @@
-// This example shows how to make the XYZrobot 6 DOF Robot Arm
-// Kit hold it self up, while complying when you try to move it
-// by hand.
+// This example shows how to make the XYZrobot 6 DOF robotic arm
+// hold itself up, while complying when you try to move it by
+// hand.
 //
 // Note that this sketch changes the Max_PWM parameter in the RAM
 // of your servos.  If your servos are not responding very well
