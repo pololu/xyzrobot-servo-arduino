@@ -245,13 +245,27 @@ public:
 
   /// Sends an I-JOG command to set the speed for this servo.
   ///
+  /// The speed should be a number between -1023 and 1023.
+  ///
+  /// A value of 0 causes an abrupt stop.  Non-zero values generally cause the
+  /// servo to smoothly ramp its speed up or down to the specified value.
+  ///
   /// The playtime specifies how long this command will last, in units of 10 ms.
   /// A value of 0 makes it last indefinitely.
   ///
   /// See writeSpeedControlPolicyRam().
-  void setSpeed(uint16_t speed, uint8_t playtime = 0);
+  void setSpeed(int16_t speed, uint8_t playtime = 0);
 
   /// Sends an I-JOG command to turn off the servo's motor.
+  ///
+  /// Note that this command interacts badly with the A1-16 servo's speed
+  /// ramping feature.  If you are in speed control mode and then send this
+  /// command, the servo will still remember what speed it was using before it
+  /// received the torqueOff() command.  If you later send a setSpeed() command
+  /// with a non-zero speed, it will ramp up or down to that speed, starting
+  /// from the remembered speed instead of starting from zero.  If you encounter
+  /// this issue, you can call `setSpeed(0)` immediately before the next
+  /// non-zero setSpeed() command to solve it.
   void torqueOff();
 
   // Resets all parameters in EEPROM to their default values.

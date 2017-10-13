@@ -134,7 +134,7 @@ void XYZrobotServo::setPosition(uint16_t position, uint8_t playtime)
   sendIJog(position, SET_POSITION_CONTROL, playtime);
 }
 
-void XYZrobotServo::setSpeed(uint16_t speed, uint8_t playtime)
+void XYZrobotServo::setSpeed(int16_t speed, uint8_t playtime)
 {
   sendIJog(speed, SET_SPEED_CONTROL, playtime);
 }
@@ -315,7 +315,6 @@ void XYZrobotServo::memoryRead(uint8_t cmd, uint8_t startAddress,
 
 void XYZrobotServo::sendIJog(uint16_t goal, uint8_t type, uint8_t playtime)
 {
-  if (goal > 1023) { goal = 1023; }
   uint8_t data[5];
   data[0] = goal & 0xFF;
   data[1] = goal >> 8 & 0xFF;
