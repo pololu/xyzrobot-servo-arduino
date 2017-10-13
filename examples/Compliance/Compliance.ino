@@ -59,7 +59,7 @@ XYZrobotServo * servos[SERVO_COUNT] = {
 void setup()
 {
   servoSerial.begin(115200);
-  servoSerial.setTimeout(10);
+  servoSerial.setTimeout(20);
 
   // To receive data, a pull-up is needed on the RX line because
   // the servos do not pull the line high while idle.  If you are
