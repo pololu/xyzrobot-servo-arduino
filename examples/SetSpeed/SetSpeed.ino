@@ -1,11 +1,8 @@
 // This sketch shows how to set the speed of a servo using open
-// loop or closed loop speed control.
+// loop speed control.
 //
-// Speeds are represented as numbers between 0 and 1023.
-//
-// This sketch only shows how to turn the servo
-// counter-clockwise.  We have not yet figured out how to make
-// them turn in the other direction with speed control mode.
+// Speeds are represented as numbers between -1023 and 1023.
+// Setting the speed to 0 results in abrupt deceleration.
 //
 // This sketch only writes data to the servos; it does not
 // receive anything.
@@ -33,29 +30,27 @@ void setup()
 {
   // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
-
-  // You can uncomment either of the lines below if you want to
-  // specify which speed control mode to use.  The servo uses
-  // open loop control by default.
-  // servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::OpenLoop);
-  // servo.writeSpdctrlPolicyRam(XYZrobotServoSpdctrlPolicy::CloseLoop);
 }
 
 void loop()
 {
   delay(2500);
 
-  // Make sure the speed ramps up starting from 0 instead of
-  // starting from a previously-remembered speed.
-  servo.setSpeed(0);
-
-  // Move the servo output counter-clockwise for some time, ramping up
-  // to the specified speed.
+  // Move the servo output counter-clockwise for some time,
+  // ramping up to the specified speed.
   servo.setSpeed(400);
-  delay(500);
+  delay(2000);
 
-  // Turn off the motor, letting the servo smoothly stop.  You
-  // could use "servo.setSpeed(0)" to stop here, but it would
-  // result in an abrupt stop.
-  servo.torqueOff();
+  // Set the speed to 0 to make the servo stop abruptly.
+  servo.setSpeed(0);
+  delay(1000);
+
+  // Move the servo output clockwise for some time, ramping up to
+  // the specified speed.
+  servo.setSpeed(-400);
+  delay(1000);
+
+  // Set the speed to -1 to make the servo smoothly ramp down to
+  // a speed that is effectively zero.
+  servo.setSpeed(-1);
 }
