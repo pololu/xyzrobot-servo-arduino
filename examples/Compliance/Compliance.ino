@@ -81,7 +81,7 @@ bool updateServo(XYZrobotServo & servo)
     return false;
   }
 
-  // If posRef, (the position that the servo is trying to
+  // If posRef (the position that the servo is trying to
   // maintain) is more than servoHysteresis away from the current
   // measured position, then the servo is probably being
   // manipulated by hand, so move posRef.
