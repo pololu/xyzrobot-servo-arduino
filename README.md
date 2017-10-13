@@ -1,7 +1,7 @@
 # XYZrobotServo: Pololu's Arduino library for the XYZrobot Smart Servo A1-16
 
 Version: 1.0.0<br>
-Release date: 2017-09-28<br>
+Release date: 2017-10-13<br>
 [![Build Status](https://travis-ci.org/pololu/xyzrobot-servo-arduino.svg?branch=master)](https://travis-ci.org/pololu/xyzrobot-servo-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -23,9 +23,9 @@ Leonardo][leo], and [Arduino Micro][micro] due to the issues explained in the
 ## Issues with receiving data
 
 This library can be used without reading any data back from the servos (see the
-SetPosition, SetSpeed, and RobotArmTest examples).  However, if you want to read
-data from a servo&mdash;such as its speed, position, or current
-consumption&mdash;then there are some issues to consider.
+SetPosition, and SetSpeed examples).  However, if you want to read data from a
+servo&mdash;such as its speed, position, or current consumption&mdash;then there
+are some issues to consider.
 
 **Receiving data with SoftwareSerial:** On platforms that do not have a free
 hardware serial port, such as the Arduino Uno and most other ATmega328P-based
@@ -37,11 +37,6 @@ the default baud rate used by the servos.
 To get your sketch to receive data reliably with SoftwareSerial, you will have
 to lower the baud rate of the servos to 57600 or lower using this library's
 ChangeBaud example.
-
-Even after you lower the baud rate, you should still be careful not to add any
-libraries to your project that will have an interrupt service routine (ISR) that
-takes a considerable amount of time compared to the duration of one serial bit,
-since such an ISR could interfere with receiving data with SoftwareSerial.
 
 Sending data with SoftwareSerial is not a problem.
 
@@ -192,4 +187,4 @@ For complete documentation of this library, see the comments in `XYZrobotServo.h
 
 ## Version history
 
-* 1.0.0 (2017-09-28): Original release.
+* 1.0.0 (2017-10-13): Original release.
