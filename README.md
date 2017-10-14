@@ -66,7 +66,7 @@ library's examples enable the pull-up on pin 0 for you.
 
 You will need to connect an appropriate power source to your servo or servos.
 See the datasheet for your servo for information on the voltage and current
-requirements of the powr supply, and information about which pins to connect it
+requirements of the power supply, and information about which pins to connect it
 to.
 
 To control the servo from your microcontroller board, you must connect the GND
