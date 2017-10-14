@@ -76,7 +76,7 @@ from the servo, you must connect your board's RX line to the TX line of the
 servo.
 
 The example sketches for this library use a hardware serial port on your Arduino
-if one is available: if you Arduino environment defines
+if one is available: if your Arduino environment defines
 `SERIAL_PORT_HARDWARE_OPEN`, the examples will use that port.  Otherwise, it
 uses SoftwareSerial on pins 10 (RX) and 11 (TX).  Therefore, the serial pins to
 use depend on which board you are using.
