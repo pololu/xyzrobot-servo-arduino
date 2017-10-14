@@ -160,9 +160,9 @@ void readEverything(XYZrobotServo & servo)
     Serial.println(ram[78] + (ram[79] << 8));
   }
 
-  uint8_t eeprom[53];
+  uint8_t eeprom[54];
   servo.eepromRead(0, eeprom, 30);
-  if (!servo.getLastError()) { servo.eepromRead(30, eeprom + 30, 23); }
+  if (!servo.getLastError()) { servo.eepromRead(30, eeprom + 30, 24); }
   if (servo.getLastError())
   {
     Serial.print(F("error reading EEPROM: "));
