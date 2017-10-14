@@ -54,7 +54,7 @@ code to enable it, or add an external pull-up resistor to your setup.
 To enable a pull-up resistor on your RX pin, run this line of code after setting
 up the serial port:
 
-    digitalWrite(rxPinNumber, HIGH);
+    pinMode(rxPinNumber, INPUT_PULLUP);
 
 The `rxPinNumber` in the code above should be the number of your RX pin, for
 example `0`.

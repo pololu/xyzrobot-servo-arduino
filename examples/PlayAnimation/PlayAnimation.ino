@@ -73,7 +73,7 @@ void setup()
   // we enable its pull-up here.  For other cases, you should add
   // code below to enable the pull-up on your board's RX line.
 #if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
-  digitalWrite(0, HIGH);
+  pinMode(0, INPUT_PULLUP);
 #endif
 }
 
