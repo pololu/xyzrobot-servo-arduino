@@ -88,7 +88,7 @@ void loop()
   uint16_t playtime = 25;
 
   // Loop over each from of the animation.
-  for (Frame * frame = animation; ; frame++)
+  for (const Frame * frame = animation; ; frame++)
   {
     uint16_t duration = (*frame)[0];
 
