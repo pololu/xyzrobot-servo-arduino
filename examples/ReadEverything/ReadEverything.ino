@@ -170,7 +170,7 @@ void readEverything(XYZrobotServo & servo)
   }
   else
   {
-    Serial.println("EEPROM:");
+    Serial.println(F("EEPROM:"));
     Serial.print(F("  Model_No: "));
     Serial.println(eeprom[0]);
     Serial.print(F("  Date: "));
