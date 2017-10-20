@@ -184,6 +184,7 @@ For complete documentation of this library, see the comments in `XYZrobotServo.h
 [robot]: https://www.pololu.com/product/2734
 [a-star]: https://www.pololu.com/category/149/a-star-programmable-controllers
 [leo]: https://www.pololu.com/product/2192
+[micro]: https://www.pololu.com/product/2188
 
 ## Version history
 
