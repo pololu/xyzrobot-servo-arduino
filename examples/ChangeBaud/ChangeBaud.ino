@@ -19,9 +19,11 @@ const XYZrobotServoBaudRate servoBaudNew = XYZrobotServoBaudRate::B115200;
 // using pin 10 to receive (RX) and pin 11 to transmit (TX).
 #ifdef SERIAL_PORT_HARDWARE_OPEN
 #define servoSerial SERIAL_PORT_HARDWARE_OPEN
+const bool usingSoftwareSerial = false;
 #else
 #include <SoftwareSerial.h>
 SoftwareSerial servoSerial(10, 11);
+const bool usingSoftwareSerial = true;
 #endif
 
 XYZrobotServo servo(servoSerial, servoId);
@@ -46,16 +48,26 @@ void tryToChangeBaud()
   success = false;
   errorMessage[0] = 0;
 
-  // Make sure we can communicate with the servo using the
-  // current baud rate.
+  // We can't reliably receive data at the old baud rate if we
+  // are using software serial and the old baud rate is 115200.
+  const bool canReceiveAtOldBaud = !(usingSoftwareSerial &&
+    servoBaudOld == XYZrobotServoBaudRate::B115200);
+
+  // Switch to the old baud rate.
   useOldBaudRate();
-  servo.readStatus();
-  if (servo.getLastError())
+
+  // Make sure we can communicate with the servo using the old
+  // baud rate.
+  if (canReceiveAtOldBaud)
   {
-    sprintf_P(errorMessage,
-      PSTR("Could not communicate with the servo: code %d."),
-      servo.getLastError());
-    return;
+    servo.readStatus();
+    if (servo.getLastError())
+    {
+      sprintf_P(errorMessage,
+        PSTR("Could not communicate with the servo: code %d."),
+        servo.getLastError());
+      return;
+    }
   }
 
   // Set the ACK policy to its default so we can later read back
@@ -81,20 +93,23 @@ void tryToChangeBaud()
   delay(20);
 
   // Make sure the baud rate in EEPROM is correct.
-  XYZrobotServoBaudRate baudFromEeprom = servo.readBaudRateEeprom();
-  if (servo.getLastError())
+  if (canReceiveAtOldBaud)
   {
-    sprintf_P(errorMessage,
-      PSTR("Failed to read baud rate from EEPROM: code %d"),
-      servo.getLastError());
-    return;
-  }
-  if (baudFromEeprom != servoBaudNew)
-  {
-    sprintf_P(errorMessage,
-      PSTR("The baud rate in EEPROM is incorrect: %d"),
-      (uint8_t)baudFromEeprom);
-    return;
+    XYZrobotServoBaudRate baudFromEeprom = servo.readBaudRateEeprom();
+    if (servo.getLastError())
+    {
+      sprintf_P(errorMessage,
+        PSTR("Failed to read baud rate from EEPROM: code %d"),
+        servo.getLastError());
+      return;
+    }
+    if (baudFromEeprom != servoBaudNew)
+    {
+      sprintf_P(errorMessage,
+        PSTR("The baud rate in EEPROM is incorrect: %d"),
+        (uint8_t)baudFromEeprom);
+      return;
+    }
   }
 
   // Restart the servo so it can use its new baud rate.
