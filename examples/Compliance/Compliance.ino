@@ -58,6 +58,8 @@ XYZrobotServo * servos[SERVO_COUNT] = {
 
 void setup()
 {
+  Serial.begin(115200);
+
   servoSerial.begin(115200);
   servoSerial.setTimeout(20);
 

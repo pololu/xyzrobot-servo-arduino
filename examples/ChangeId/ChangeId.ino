@@ -95,6 +95,8 @@ void tryToChangeId()
 
 void setup()
 {
+  Serial.begin(115200);
+
   // Turn on the serial port and set its baud rate.
   servoSerial.begin(115200);
   servoSerial.setTimeout(20);

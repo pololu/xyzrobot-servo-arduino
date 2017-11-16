@@ -117,6 +117,8 @@ void tryToChangeBaud()
 
 void setup()
 {
+  Serial.begin(115200);
+
   servoSerial.setTimeout(20);
 
   // To receive data, a pull-up is needed on the RX line because
