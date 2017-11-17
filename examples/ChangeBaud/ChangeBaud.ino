@@ -1,6 +1,12 @@
 // This example shows how to change the baud rate of a servo.
 //
-// Before using this, be sure to set the parameters below.
+// To use this sketch:
+//
+// 1) Change the servoId, servoBaudOld, and servoBaudNew
+//    parameters below.
+// 2) Upload the sketch to your board.
+// 3) Open the Serial Monitor and set its baud rate to 115200.
+// 4) In the input box, type "y" and click "Send".
 
 #include <XYZrobotServo.h>
 
@@ -130,6 +136,22 @@ void tryToChangeBaud()
   success = true;
 }
 
+// Prompt the user to send 'y' and wait until they do it.
+void waitForUserInput()
+{
+  uint16_t lastPromptTime = 0;
+  while (true)
+  {
+    if ((uint16_t)(millis() - lastPromptTime) >= 2000)
+    {
+      Serial.println(F("Send \"y\" to change the baud rate."));
+      lastPromptTime = millis();
+    }
+
+    if (Serial.read() == 'y') { return; }
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -147,22 +169,24 @@ void setup()
   pinMode(0, INPUT_PULLUP);
 #endif
 
-  delay(2500);
-
-  tryToChangeBaud();
 }
 
 void loop()
 {
+  waitForUserInput();
+
+  Serial.println(F("Trying to change the baud rate..."));
+
+  tryToChangeBaud();
+
   if (success)
   {
-    Serial.println("Successfully changed the servo's baud rate.");
+    Serial.println(F("Successfully changed the servo's baud rate."));
+    while (true) { }
   }
   else
   {
     Serial.print(F("Error: "));
     Serial.println(errorMessage);
   }
-
-  delay(2000);
 }

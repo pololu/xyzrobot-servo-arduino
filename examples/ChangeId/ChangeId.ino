@@ -1,6 +1,13 @@
 // This example shows how to change the ID number of a servo.
 //
-// Before using this, be sure to set the parameters below.
+// To use this sketch:
+//
+// 1) Change the servoIdOld and servoIdNew parameters below.
+// 2) If necessary, change the baud rate on the
+//    servoSerial.begin() line in in setup() to match the
+//    baud rate used by your servos.
+// 3) Open the Serial Monitor and set its baud rate to 115200.
+// 4) In the input box, type "y" and click "Send".
 
 // Change this to be ID that the servo currently has.
 const uint8_t servoIdOld = 1;
@@ -93,6 +100,22 @@ void tryToChangeId()
   success = true;
 }
 
+// Prompt the user to send 'y' and wait until they do it.
+void waitForUserInput()
+{
+  uint16_t lastPromptTime = 0;
+  while (true)
+  {
+    if ((uint16_t)(millis() - lastPromptTime) >= 2000)
+    {
+      Serial.println(F("Send \"y\" to change the ID."));
+      lastPromptTime = millis();
+    }
+
+    if (Serial.read() == 'y') { return; }
+  }
+}
+
 void setup()
 {
   Serial.begin(115200);
@@ -111,17 +134,20 @@ void setup()
 #if defined(SERIAL_PORT_HARDWARE_OPEN) && defined(__AVR_ATmega32U4__)
   pinMode(0, INPUT_PULLUP);
 #endif
-
-  delay(2500);
-
-  tryToChangeId();
 }
 
 void loop()
 {
+  waitForUserInput();
+
+  Serial.println(F("Trying to change the ID..."));
+
+  tryToChangeId();
+
   if (success)
   {
-    Serial.println("Successfully changed the servo's ID.");
+    Serial.println(F("Successfully changed the servo's ID."));
+    while (true) { }
   }
   else
   {
