@@ -1,7 +1,7 @@
 # XYZrobotServo: Pololu's Arduino library for the XYZrobot Smart Servo A1-16
 
-Version: 1.0.0<br>
-Release date: 2017-10-13<br>
+Version: 1.1.0<br>
+Release date: 2017-11-17<br>
 [![Build Status](https://travis-ci.org/pololu/xyzrobot-servo-arduino.svg?branch=master)](https://travis-ci.org/pololu/xyzrobot-servo-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
@@ -188,4 +188,15 @@ For complete documentation of this library, see the comments in `XYZrobotServo.h
 
 ## Version history
 
+* 1.1.0 (2017-11-17):
+  - Added the BlinkAll example.
+  - Better support for the Arduino Uno in the examples:
+    - Fixed all examples that use the Serial Monitor to initialize its baud
+      rate to 115200 instead of leaving it uninitialized.
+    - Fixed the ChangeBaud example so that it does not try to read data at 115200
+      baud using software serial, since that is unreliable.
+    - Fixed the ChangeBaud and ChangeId examples to work better on boards
+      that automatically reset when the Serial Monitor is opened.
+      These examples now require user input from the serial monitor.
+  - This release contains no changes to the actual library code.
 * 1.0.0 (2017-10-13): Original release.
