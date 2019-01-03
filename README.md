@@ -170,7 +170,7 @@ policy.
 ## Getting your servos to move
 
 After you have configured your servos, you should try running a simple example
-to make sure you can move your servos.  If you have the [XYZrobot arm], you
+to make sure you can move your servos.  If you have the [XYZrobot arm][arm], you
 should run the RobotArmTest example.  If you have a standalone servo, you should
 run the SetPosition or SetSpeed example.
 
