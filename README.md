@@ -2,7 +2,6 @@
 
 Version: 1.1.0<br>
 Release date: 2017-11-17<br>
-[![Build Status](https://travis-ci.org/pololu/xyzrobot-servo-arduino.svg?branch=master)](https://travis-ci.org/pololu/xyzrobot-servo-arduino)<br>
 [www.pololu.com](https://www.pololu.com/)
 
 ## Summary
